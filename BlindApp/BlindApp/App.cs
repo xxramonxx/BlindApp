@@ -11,7 +11,7 @@ namespace BlindApp
     {
         public App()
         {
-            // The root page of your application nn j
+            // The root page of your application
             MainPage = new ContentPage
             {
                 Content = new StackLayout
