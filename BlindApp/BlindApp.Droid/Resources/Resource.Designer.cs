@@ -26,6 +26,8 @@ namespace BlindApp.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::Plugin.TextToSpeech.Resource.String.ApplicationName = global::BlindApp.Droid.Resource.String.ApplicationName;
+			global::Plugin.TextToSpeech.Resource.String.Hello = global::BlindApp.Droid.Resource.String.Hello;
 			global::Xamarin.Forms.Platform.Resource.Animation.abc_fade_in = global::BlindApp.Droid.Resource.Animation.abc_fade_in;
 			global::Xamarin.Forms.Platform.Resource.Animation.abc_fade_out = global::BlindApp.Droid.Resource.Animation.abc_fade_out;
 			global::Xamarin.Forms.Platform.Resource.Animation.abc_grow_fade_in_from_bottom = global::BlindApp.Droid.Resource.Animation.abc_grow_fade_in_from_bottom;

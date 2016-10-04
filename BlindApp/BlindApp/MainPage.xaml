@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BlindApp.MainPage">
+  <StackLayout>
+    <Label x:Name="fgaafg" Text="stary ko mydlil barana" VerticalOptions="Center" HorizontalOptions="Center" />
+
+    <Label x:Name="fgfg" Text="knjknjk" VerticalOptions="End" HorizontalOptions="Center" />
+    <!-- <Label Text="{Binding MainText}" VerticalOptions="Center" HorizontalOptions="Center" /> -->
+    <Button Text="Tap for click count!" Clicked="OnButtonClicked" />
+
+    <Button Clicked="marhaEvent" Text="holapi" />
+  </StackLayout>
+</ContentPage>

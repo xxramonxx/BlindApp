@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Plugin.TextToSpeech;
+using Plugin.TextToSpeech.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +15,6 @@ namespace BlindApp
         {
             // The root page of your application
             MainPage = new MainPage();
-            
         }
 
         protected override void OnStart()
