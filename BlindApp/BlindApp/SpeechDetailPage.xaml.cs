@@ -12,11 +12,12 @@ using Plugin.TextToSpeech;
 
 namespace BlindApp
 {
-    public partial class MainPage : ContentPage
+    public partial class SpeechDetailPage : ContentPage
     {
         TextToSpeech speaker;
-        public MainPage()
+        public SpeechDetailPage()
         {
+            Title = "Mydlil mi barana";
             InitializeComponent();
 
             speaker = new TextToSpeech();
