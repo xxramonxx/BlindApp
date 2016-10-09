@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using System.Collections.Generic;
 
@@ -26,7 +25,7 @@ namespace BlindApp
             };
             beaconService.DataClearing += (sender, e) =>
             {
-                Data.Clear();
+             //   Data.Clear();
                 OnListChanged();
             };
 
@@ -35,11 +34,7 @@ namespace BlindApp
 
         private void OnListChanged()
         {
-            var handler = ListChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            ListChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
-using System.Collections.ObjectModel;
+﻿using Xamarin.Forms;
 
 namespace BlindApp
 {
@@ -30,7 +28,7 @@ namespace BlindApp
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 ItemTemplate = new DataTemplate(typeof(ListItemView)),
-                RowHeight = 90,
+                RowHeight = 180,
             };
 
             _list.SetBinding(ListView.ItemsSourceProperty, "Data");

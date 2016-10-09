@@ -2,9 +2,8 @@
 
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+using AltBeaconOrg.BoundBeacon;
+
 using Android.OS;
 using Plugin.TextToSpeech;
 
@@ -13,12 +12,14 @@ namespace BlindApp.Droid
     [Activity(
         Label = "BlindApp",
         Icon = "@drawable/icon",
-        MainLauncher = true,
+      //  MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
         Theme = "@style/MyTheme"
         )]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IBeaconConsumer
     {
+        private IAltBeaconService beaconService;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -27,6 +28,35 @@ namespace BlindApp.Droid
             CrossTextToSpeech.Current.Init();
             LoadApplication(new App());
         }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            // Handle when your app sleeps
+        /*    beaconService.StopMonitoring();
+            beaconService.StopRanging();*/
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            // Handle when your app resumes
+        /*    if (beaconService != null)
+            {
+                beaconService.StartMonitoring();
+                beaconService.StartRanging();
+            }*/
+        }
+        
+        #region IBeaconConsumer Implementation
+        public void OnBeaconServiceConnect()
+        {
+            beaconService = Xamarin.Forms.DependencyService.Get<IAltBeaconService>();
+
+            beaconService.StartMonitoring();
+            beaconService.StartRanging();
+        }
+        #endregion
     }
 }
 

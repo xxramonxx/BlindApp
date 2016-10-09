@@ -14,11 +14,13 @@ namespace BlindApp
 {
     public partial class SpeechDetailPage : ContentPage
     {
+        int counter = 0;
         TextToSpeech speaker;
+
         public SpeechDetailPage()
         {
-            Title = "Mydlil mi barana";
-            InitializeComponent();
+            Title = "Porozpravajme sa";
+            InitializeComponent ();
 
             speaker = new TextToSpeech();
         }
@@ -29,7 +31,25 @@ namespace BlindApp
 
         public void OnButtonClicked(object obj, EventArgs e)
         {
-            speaker.speakNext("mydlil mi barana a dve ovce");
+            counter += 1;
+            if (counter == 4)
+            {
+                speaker.speakNext("Pred vami sa nachádza schodisko, buďte opatrný");
+                counter = 0;
+            }
+            else if (counter == 3)
+            {
+                speaker.speakNext("Nerozprávam však veľmi k veci");
+            }
+            else if (counter == 2)
+            {
+                speaker.speakNext("Rada sa rozprávam");
+            }
+            else if (counter == 1)
+            {
+                speaker.speakNext("Dobrý večer priatelia, volám sa Esmeralda !");
+            }
+
 
         }
     }

@@ -1,11 +1,12 @@
 using System;
 using AltBeaconOrg.BoundBeacon;
 using BlindApp.Droid.Services;
-using Android.Widget;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Android.App;
+using System.Diagnostics;
 
 [assembly: Xamarin.Forms.Dependency(typeof(AltBeaconService))]
 
@@ -18,8 +19,8 @@ namespace BlindApp.Droid.Services
         private BeaconManager _beaconManager;
 
         Region _tagRegion;
-
         Region _emptyRegion;
+
         private readonly List<Beacon> _data;
 
         public AltBeaconService()
@@ -54,13 +55,6 @@ namespace BlindApp.Droid.Services
             // Enable the BeaconManager 
             BeaconManager bm = BeaconManager.GetInstanceForApplication(Xamarin.Forms.Forms.Context);
 
-            #region Set up Beacon Simulator if testing without a BLE device
-            //			var beaconSimulator = new BeaconSimulator();
-            //			beaconSimulator.CreateBasicSimulatedBeacons();
-            //
-            //			BeaconManager.BeaconSimulator = beaconSimulator;
-            #endregion
-
             var iBeaconParser = new BeaconParser();
             //	Estimote > 2013
             iBeaconParser.SetBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
@@ -71,19 +65,19 @@ namespace BlindApp.Droid.Services
             _monitorNotifier.DetermineStateForRegionComplete += DeterminedStateForRegionComplete;
             _rangeNotifier.DidRangeBeaconsInRegionComplete += RangingBeaconsInRegion;
 
-            _tagRegion = new AltBeaconOrg.BoundBeacon.Region("myUniqueBeaconId", Identifier.Parse("E4C8A4FC-F68B-470D-959F-29382AF72CE7"), null, null);
-            _tagRegion = new AltBeaconOrg.BoundBeacon.Region("myUniqueBeaconId", Identifier.Parse("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
-            _emptyRegion = new AltBeaconOrg.BoundBeacon.Region("myEmptyBeaconId", null, null, null);
+            _tagRegion = new Region("myUniqueBeaconId", Identifier.Parse("E4C8A4FC-F68B-470D-959F-29382AF72CE7"), null, null);
+            _tagRegion = new Region("myUniqueBeaconId", Identifier.Parse("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
+            _emptyRegion = new Region("myEmptyBeaconId", null, null, null);
 
             bm.SetBackgroundMode(false);
-            bm.Bind((IBeaconConsumer)Xamarin.Forms.Forms.Context);
+            bm.Bind((IBeaconConsumer) Xamarin.Forms.Forms.Context);
 
             return bm;
         }
 
         public void StartMonitoring()
         {
-            BeaconManagerImpl.SetForegroundBetweenScanPeriod(5000); // 5000 milliseconds
+            BeaconManagerImpl.SetForegroundBetweenScanPeriod(1000);
 
             BeaconManagerImpl.SetMonitorNotifier(_monitorNotifier);
             _beaconManager.StartMonitoringBeaconsInRegion(_tagRegion);
@@ -92,11 +86,23 @@ namespace BlindApp.Droid.Services
 
         public void StartRanging()
         {
-            BeaconManagerImpl.SetForegroundBetweenScanPeriod(5000); // 5000 milliseconds
+            BeaconManagerImpl.SetForegroundBetweenScanPeriod(1000);
 
             BeaconManagerImpl.SetRangeNotifier(_rangeNotifier);
             _beaconManager.StartRangingBeaconsInRegion(_tagRegion);
             _beaconManager.StartRangingBeaconsInRegion(_emptyRegion);
+        }
+
+        public void StopMonitoring()
+        {
+            _beaconManager.StopMonitoringBeaconsInRegion(_tagRegion);
+            _beaconManager.StopMonitoringBeaconsInRegion(_emptyRegion);
+        }
+
+        public void StopRanging()
+        {
+            _beaconManager.StopRangingBeaconsInRegion(_tagRegion);
+            _beaconManager.StopRangingBeaconsInRegion(_emptyRegion);
         }
 
         private void DeterminedStateForRegionComplete(object sender, MonitorEventArgs e)
@@ -199,11 +205,15 @@ namespace BlindApp.Droid.Services
                 var data = new List<SharedBeacon>();
                 _data.ForEach(b =>
                 {
-                    data.Add(new SharedBeacon { Id = b.Id1.ToString(), Distance = string.Format("{0:N2}m", b.Distance) });
+                    data.Add(new SharedBeacon {
+                        Id = b.Id1.ToString(),
+                        Minor = b.Id3.ToString(),
+                        Distance = string.Format("{0:N2}m", b.Distance),
+                        MAC = b.BluetoothAddress.ToString()
+                    });
                 });
                 handler(this, new ListChangedEventArgs(data));
             }
         }
     }
 }
-

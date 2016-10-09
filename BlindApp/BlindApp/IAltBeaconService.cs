@@ -8,6 +8,9 @@ namespace BlindApp
         void StartMonitoring();
         void StartRanging();
 
+        void StopMonitoring();
+        void StopRanging();
+
         event EventHandler<ListChangedEventArgs> ListChanged;
         event EventHandler DataClearing;
     }
