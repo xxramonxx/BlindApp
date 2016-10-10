@@ -17,9 +17,18 @@ namespace BlindApp.Droid
         {
             base.OnCreate(bundle);
 
+            SetContentView(Resource.Layout.SplashLayout);
+            System.Threading.ThreadPool.QueueUserWorkItem(o => LoadActivity());
+
             var intent = new Intent(this, typeof(MainActivity));
             StartActivity(intent);
             Finish();
+        }
+
+        private void LoadActivity()
+        {
+            System.Threading.Thread.Sleep(5000); // Simulate a long pause    
+            RunOnUiThread(() => StartActivity(typeof(MainActivity)));
         }
     }
 }

@@ -28,25 +28,6 @@ namespace BlindApp.Droid
             CrossTextToSpeech.Current.Init();
             LoadApplication(new App());
         }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
-            // Handle when your app sleeps
-        /*    beaconService.StopMonitoring();
-            beaconService.StopRanging();*/
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
-            // Handle when your app resumes
-        /*    if (beaconService != null)
-            {
-                beaconService.StartMonitoring();
-                beaconService.StartRanging();
-            }*/
-        }
         
         #region IBeaconConsumer Implementation
         public void OnBeaconServiceConnect()

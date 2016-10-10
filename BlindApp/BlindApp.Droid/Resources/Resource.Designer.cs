@@ -2413,6 +2413,9 @@ namespace BlindApp.Droid
 			// aapt resource value: 0x7f07003f
 			public const int image = 2131165247;
 			
+			// aapt resource value: 0x7f070098
+			public const int imageView1 = 2131165336;
+			
 			// aapt resource value: 0x7f070096
 			public const int info = 2131165334;
 			
@@ -2933,7 +2936,10 @@ namespace BlindApp.Droid
 			public const int select_dialog_singlechoice_material = 2130903093;
 			
 			// aapt resource value: 0x7f030036
-			public const int support_simple_spinner_dropdown_item = 2130903094;
+			public const int SplashLayout = 2130903094;
+			
+			// aapt resource value: 0x7f030037
+			public const int support_simple_spinner_dropdown_item = 2130903095;
 			
 			static Layout()
 			{
