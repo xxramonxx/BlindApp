@@ -8,11 +8,11 @@ using Xamarin.Forms;
 
 namespace BlindApp
 {
-	public partial class MenuPage : ContentPage
-	{
-		public MenuPage ()
-		{
-			InitializeComponent ();
+    public partial class MenuPage : ContentPage
+    {
+        public MenuPage()
+        {
+            InitializeComponent();
             Title = "Title";
         }
 
@@ -28,7 +28,10 @@ namespace BlindApp
             {
                 MainPage.DetailChange("BeaconLocator");
             }
-
+            if (button == this.FindByName<Button>("SpeechRecognition"))
+            {
+                MainPage.DetailChange("SpeechRecognition");
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace BlindApp
         public SpeechDetailPage()
         {
             Title = "Porozpravajme sa";
-            InitializeComponent ();
+            InitializeComponent();
 
             speaker = new TextToSpeech();
         }

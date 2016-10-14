@@ -2173,7 +2173,7 @@ namespace BlindApp.Droid
 			public const int ic_tv_light = 2130837649;
 			
 			// aapt resource value: 0x7f020092
-			public const int Icon = 2130837650;
+			public const int icon = 2130837650;
 			
 			// aapt resource value: 0x7f020093
 			public const int mr_dialog_material_background_dark = 2130837651;
@@ -2617,6 +2617,9 @@ namespace BlindApp.Droid
 			// aapt resource value: 0x7f070013
 			public const int showTitle = 2131165203;
 			
+			// aapt resource value: 0x7f070099
+			public const int sliding_tabs = 2131165337;
+			
 			// aapt resource value: 0x7f07006c
 			public const int snackbar_action = 2131165292;
 			
@@ -2670,6 +2673,9 @@ namespace BlindApp.Droid
 			
 			// aapt resource value: 0x7f070048
 			public const int title_template = 2131165256;
+			
+			// aapt resource value: 0x7f07009a
+			public const int toolbar = 2131165338;
 			
 			// aapt resource value: 0x7f070032
 			public const int top = 2131165234;
@@ -2940,6 +2946,12 @@ namespace BlindApp.Droid
 			
 			// aapt resource value: 0x7f030037
 			public const int support_simple_spinner_dropdown_item = 2130903095;
+			
+			// aapt resource value: 0x7f030038
+			public const int Tabbar = 2130903096;
+			
+			// aapt resource value: 0x7f030039
+			public const int Toolbar = 2130903097;
 			
 			static Layout()
 			{

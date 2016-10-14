@@ -30,6 +30,10 @@ namespace BlindApp
             {
                 switchPage = new BeaconPage();
             }
+            if (PageName == "SpeechRecognition")
+            {
+                switchPage = new SpeechRecognitionPage();
+            }
 
             masterDetailPage.Detail = new NavigationPage(switchPage);
             masterDetailPage.IsPresented = false;

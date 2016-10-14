@@ -18,7 +18,7 @@ namespace BlindApp
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            // Handle when your app starts aa
         }
 
         protected override void OnSleep()
