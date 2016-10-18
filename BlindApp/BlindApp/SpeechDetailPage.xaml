@@ -6,7 +6,7 @@
     <Label x:Name="fgaafg" Text="Isiel raz jeden pan a stratil sa" VerticalOptions="Center" HorizontalOptions="Center" />
 
     <Label x:Name="fgfg" Text="dodnes sa nenasiel" VerticalOptions="End" HorizontalOptions="Center" />
-    <!-- <Label Text="{Binding MainText}" VerticalOptions="Center" HorizontalOptions="Center" /> -->
+
     <Button Text="Klikni a ja ti nieco poviem" Clicked="OnButtonClicked" />
 
   </StackLayout>

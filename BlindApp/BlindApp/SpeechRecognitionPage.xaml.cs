@@ -12,14 +12,16 @@ namespace BlindApp
     public partial class SpeechRecognitionPage : ContentPage
     {
         ISpeechRecognition speechService;
-        public static Label label;
+        public static Label labelObject;
+        public static Switch switchObject;
 
         public SpeechRecognitionPage()
         {
             InitializeComponent();
             speechService = DependencyService.Get<ISpeechRecognition>();
             speechService.Initialize();
-            label = this.FindByName<Label>("Label1");
+            labelObject = this.FindByName<Label>("Label1");
+            switchObject = this.FindByName<Switch>("Switch1");
         }
 
         public void ToggleEvent(object obj, EventArgs e)
@@ -50,12 +52,17 @@ namespace BlindApp
         public void onTaskCompleted(IList<string> result)
         {
             string text = "";
-            if (result.Count > 0)
+            if (result != null && result.Count > 0)
             {
                 text = result[0];
             }
-               
-            SpeechRecognitionPage.label.Text = text;
+            else
+            {
+                var start = DateTime.Now;
+                text = "Povedz daco ty debil " + start.ToString();
+            }
+            SpeechRecognitionPage.switchObject.IsToggled = false;
+            SpeechRecognitionPage.labelObject.Text = text;
         }
 
         public static int Compute(string s, string t)

@@ -24,11 +24,7 @@ namespace BlindApp
 
             speaker = new TextToSpeech();
         }
-        public void marhaEvent(object obj, EventArgs e)
-        {
-            Debug.WriteLine("aaaa");
-        }
-
+ 
         public void OnButtonClicked(object obj, EventArgs e)
         {
             counter += 1;
@@ -47,9 +43,8 @@ namespace BlindApp
             }
             else if (counter == 1)
             {
-                speaker.speakNext("Dobrý večer priatelia, volám sa Esmeralda !");
+                speaker.speakNext("Dobrý večer priatelia, kam chcete ísť ?");
             }
-
 
         }
     }

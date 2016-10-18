@@ -19,8 +19,6 @@ namespace BlindApp.Droid
 {
     class SpeechRecogintionListener: Java.Lang.Object, IRecognitionListener
     {
-        public IList<string> matches = null;
-
         public void OnRmsChanged(float rmsdB)
         {
      //       progressBar.Progress = ((int)rmsdB);
@@ -44,12 +42,14 @@ namespace BlindApp.Droid
         public void OnError([GeneratedEnum] SpeechRecognizerError error)
         {
             string errorMessage = getErrorText(error);
-      //      returnedText.Text = errorMessage;
+            Log.Debug("OnError", errorMessage);
+            new CallAsync(new Callback()).Execute(null as Java.Lang.Object); // toto sa mi velmi nepaci
         }
 
         public void OnEvent(int eventType, Bundle @params)
         {
-            Log.Debug("OnEvent", "error");
+            Log.Debug("OnEvent", eventType.ToString());
+            Log.Debug("OnEvent", @params.ToString());
         }
 
         public void OnPartialResults(Bundle partialResults)
@@ -64,14 +64,8 @@ namespace BlindApp.Droid
 
         public void OnResults(Bundle results)
         {
+            Log.Debug("OnResults", "OnResults");
             new CallAsync(new Callback()).Execute(results.GetStringArrayList(SpeechRecognizer.ResultsRecognition) as Java.Lang.Object);
-            /*matches = results.GetStringArrayList(SpeechRecognizer.ResultsRecognition);
-
-            string text = "";
-            foreach (string result in matches)
-                text += result + "\n";
-
-            returnedText.Text = text;*/
         }
 
         public static string getErrorText(SpeechRecognizerError errorCode)
@@ -127,15 +121,16 @@ namespace BlindApp.Droid
             {
                 Console.WriteLine("DoInBackground", "Start");
 
-                var resultList = @params[0] as IList<string>;
-
-                while (resultList.Count == 0)
+                if (@params[0] != null)
                 {
-                    //wait
+                    var resultList = @params[0] as IList<string>;
+                    while (resultList.Count == 0)
+                    {                   
+                        //wait
+                    }
+
+                    this.result = resultList;
                 }
-
-                this.result = resultList;
-
                 return null;
             }
 

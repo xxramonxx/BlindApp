@@ -121,6 +121,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FancyAndroidButtonRenderer.cs" />
+    <Compile Include="FancyGestureListener.cs" />
+    <Compile Include="MyButtonRenderer.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MonitorNotifier.cs" />
     <Compile Include="RangeNotifier.cs" />
