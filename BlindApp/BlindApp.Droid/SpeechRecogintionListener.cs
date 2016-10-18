@@ -42,8 +42,12 @@ namespace BlindApp.Droid
         public void OnError([GeneratedEnum] SpeechRecognizerError error)
         {
             string errorMessage = getErrorText(error);
+
+            if (error != SpeechRecognizerError.Client)
+            {
+                new CallAsync(new Callback()).Execute(null as Java.Lang.Object); // toto sa mi velmi nepaci
+            }
             Log.Debug("OnError", errorMessage);
-            new CallAsync(new Callback()).Execute(null as Java.Lang.Object); // toto sa mi velmi nepaci
         }
 
         public void OnEvent(int eventType, Bundle @params)
@@ -64,13 +68,13 @@ namespace BlindApp.Droid
 
         public void OnResults(Bundle results)
         {
-            Log.Debug("OnResults", "OnResults");
             new CallAsync(new Callback()).Execute(results.GetStringArrayList(SpeechRecognizer.ResultsRecognition) as Java.Lang.Object);
+            Log.Debug("OnResults", "OnResults");
         }
 
         public static string getErrorText(SpeechRecognizerError errorCode)
         {
-            string message;
+            string message ;
             switch (errorCode)
             {
                 case SpeechRecognizerError.Audio:
@@ -98,7 +102,7 @@ namespace BlindApp.Droid
                     message = "error from server";
                     break;
                 case SpeechRecognizerError.SpeechTimeout:
-                    message = "Sspeech timeout";
+                    message = "Speech timeout";
                     break;
                 default:
                     message = "Didn't understand, please try again.";
