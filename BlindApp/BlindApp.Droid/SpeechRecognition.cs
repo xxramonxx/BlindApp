@@ -19,15 +19,18 @@ namespace BlindApp.Droid
 {
     class SpeechRecognition : ISpeechRecognition
     {
-        private SpeechRecognizer speech = null;
+        private bool isListening;
         private Intent recognizerIntent;
+        private SpeechRecognizer speech = null;
         private SpeechRecogintionListener listener;
 
         public void Initialize()
         {
+            isListening = false;
             listener = new SpeechRecogintionListener();
             speech = SpeechRecognizer.CreateSpeechRecognizer(Application.Context);
             speech.SetRecognitionListener(listener);
+
             recognizerIntent = new Intent(RecognizerIntent.ActionRecognizeSpeech);
             recognizerIntent.PutExtra(RecognizerIntent.ExtraLanguagePreference, "sk");
             recognizerIntent.PutExtra(RecognizerIntent.ExtraCallingPackage, Application.Context.PackageName);
@@ -43,11 +46,18 @@ namespace BlindApp.Droid
         public void Start()
         {
             speech.StartListening(recognizerIntent);
+            isListening = true;
         }
 
         public void Stop()
         {
             speech.StopListening();
+            isListening = false;
+        }
+
+        public void IsListening()
+        {
+           // return isListening;
         }
     }
 }

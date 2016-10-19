@@ -2,5 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 	<uses-sdk android:minSdkVersion="15" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<application android:label="BlindApp.Droid"></application>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <application android:label="BlindApp.Droid"></application>
 </manifest>

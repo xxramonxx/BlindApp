@@ -8,6 +8,8 @@ namespace BlindApp
 {
     public interface ISpeechRecognition
     {
+        void IsListening();
+
         void Initialize();
         void Start();
         void Stop();

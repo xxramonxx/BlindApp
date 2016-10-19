@@ -45,6 +45,25 @@ namespace BlindApp
                 Debug.WriteLine(text);*/
             }
         }
+
+
+        private void OnTouchDown(object sender, EventArgs args)
+        {
+            Debug.WriteLine("*******************************************************");
+            Debug.WriteLine("down");
+         /*   if (speechService.IsListening)
+            {*/
+                //     progressBar.Visibility = ViewStates.Visible;
+                //       progressBar.Indeterminate = true;
+                speechService.Start();
+       //     }
+        }
+
+        private void OnTouchUp(object sender, EventArgs args)
+        {
+            Debug.WriteLine("*******************************************************");
+            Debug.WriteLine("up");
+        }
     }
 
     public class Callback : OnTaskCompleted

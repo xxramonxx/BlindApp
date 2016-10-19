@@ -6,6 +6,7 @@ using AltBeaconOrg.BoundBeacon;
 
 using Android.OS;
 using Plugin.TextToSpeech;
+using ScnViewGestures.Plugin.Forms.Droid.Renderers;
 
 namespace BlindApp.Droid
 {
@@ -25,6 +26,7 @@ namespace BlindApp.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            ViewGesturesRenderer.Init();
             CrossTextToSpeech.Current.Init();
             LoadApplication(new App());
         }

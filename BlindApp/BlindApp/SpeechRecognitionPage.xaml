@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="BlindApp.SpeechRecognitionPage">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:BlindApp="clr-namespace:ScnViewGestures.Plugin.Forms;assembly=ScnViewGestures"
+             x:Class="BlindApp.SpeechRecognitionPage"
+             >
   <ContentPage.Content>
     <StackLayout>
       <StackLayout x:Name="StackLayout1"
@@ -23,6 +27,10 @@
       HorizontalOptions="CenterAndExpand"
       VerticalOptions="CenterAndExpand"
 >
+        <BlindApp:ViewGestures TouchBegan="OnTouchDown" TouchEnded="OnTouchUp">
+          <Label x:Name="fgaafg" Text="Tukni sem" VerticalOptions="Center" HorizontalOptions="Center" />
+        </BlindApp:ViewGestures>
+        
         <Switch x:Name="Switch1"
           Toggled="ToggleEvent"
           ClassId="Switch1"

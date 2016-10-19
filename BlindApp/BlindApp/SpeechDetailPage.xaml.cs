@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using Xamarin.Forms;
 using Plugin.TextToSpeech.Abstractions;
 using Plugin.TextToSpeech;
+using Plugin.Vibrate;
 
 namespace BlindApp
 {
@@ -24,28 +25,33 @@ namespace BlindApp
 
             speaker = new TextToSpeech();
         }
- 
-        public void OnButtonClicked(object obj, EventArgs e)
+
+        public async void OnButtonClicked(object obj, EventArgs e)
         {
+            Button button = obj as Button;
+            Debug.WriteLine(button.IsFocused);
+            CrossVibrate.Current.Vibration(200);
+
             counter += 1;
             if (counter == 4)
             {
-                speaker.speakNext("Pred vami sa nachádza schodisko, buďte opatrný");
+                speaker.speak("Pred vami sa nachádza schodisko, buďte opatrný");
                 counter = 0;
             }
             else if (counter == 3)
             {
-                speaker.speakNext("Nerozprávam však veľmi k veci");
+                speaker.speak("Nerozprávam však veľmi k veci");
             }
             else if (counter == 2)
             {
-                speaker.speakNext("Rada sa rozprávam");
+                speaker.speak("Rada sa rozprávam");
             }
             else if (counter == 1)
             {
-                speaker.speakNext("Dobrý večer priatelia, kam chcete ísť ?");
+                speaker.speak("Dobrý večer ctený používateľ, kam chcete ísť ?");
             }
-
+            await Task.Delay(1000);
+            Debug.WriteLine(button.IsFocused);
         }
     }
 }
