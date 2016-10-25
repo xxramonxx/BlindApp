@@ -38,22 +38,21 @@
     <Compile Include="App.cs" />
     <Compile Include="BeaconPage.cs" />
     <Compile Include="BeaconViewModel.cs" />
-    <Compile Include="IAltBeaconService.cs" />
-    <Compile Include="ISpeechRecognition.cs" />
+    <Compile Include="Interfaces\IAltBeaconService.cs" />
+    <Compile Include="Interfaces\ISpeechRecognition.cs" />
     <Compile Include="ListChangedArgs.cs" />
     <Compile Include="ListItemView.cs" />
-    <Compile Include="MainPage.cs" />
-    <Compile Include="MenuPage.xaml.cs">
+    <Compile Include="View\Pages\MainPage.cs" />
+    <Compile Include="View\Pages\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyButton.cs" />
     <Compile Include="OnTaskCompleted.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedBeacon.cs" />
-    <Compile Include="SpeechDetailPage.xaml.cs">
+    <Compile Include="View\Pages\SpeechDetailPage.xaml.cs">
       <DependentUpon>SpeechDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SpeechRecognitionPage.xaml.cs">
+    <Compile Include="View\Pages\SpeechRecognitionPage.xaml.cs">
       <DependentUpon>SpeechRecognitionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextToSpeech.cs" />
@@ -103,19 +102,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MenuPage.xaml">
+    <EmbeddedResource Include="View\Pages\MenuPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SpeechDetailPage.xaml">
+    <EmbeddedResource Include="View\Pages\SpeechDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SpeechRecognitionPage.xaml">
+    <EmbeddedResource Include="View\Pages\SpeechRecognitionPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

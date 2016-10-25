@@ -175,7 +175,7 @@ namespace BlindApp.Droid.Services
         {
             ((Activity)Xamarin.Forms.Forms.Context).RunOnUiThread(() =>
             {
-                _data.Clear();
+   //             _data.Clear();
                 OnDataClearing();
             });
         }

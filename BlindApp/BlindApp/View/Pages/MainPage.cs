@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -16,7 +17,7 @@ namespace BlindApp
         {
             masterDetailPage = this;
             Master = new MenuPage();
-            Detail = new NavigationPage(new SpeechDetailPage());
+            Detail = new NavigationPage(new SpeechRecognitionPage());
         }
 
         public static void DetailChange(String PageName)

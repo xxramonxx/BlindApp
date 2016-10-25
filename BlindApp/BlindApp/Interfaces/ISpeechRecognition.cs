@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace BlindApp
 {
-    public class MyButton : Button
+    public interface ISpeechRecognition
     {
+        bool IsListening();
+
+        void Initialize();
+        void Start();
+        void Stop();
     }
 }

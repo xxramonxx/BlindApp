@@ -11,6 +11,10 @@ namespace BlindApp
 {
     public class App : Application
     {
+ 
+        public static int ScreenWidth;
+        public static int ScreenHeight;
+
         public App()
         {
             MainPage = new MainPage();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScnViewGestures.Plugin.Forms;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,58 +12,51 @@ namespace BlindApp
 {
     public partial class SpeechRecognitionPage : ContentPage
     {
-        ISpeechRecognition speechService;
+        public static ISpeechRecognition speechService;
+        public static TextToSpeech speaker;
         public static Label labelObject;
-        public static Switch switchObject;
 
         public SpeechRecognitionPage()
         {
             InitializeComponent();
             speechService = DependencyService.Get<ISpeechRecognition>();
             speechService.Initialize();
+            speaker = new TextToSpeech();
             labelObject = this.FindByName<Label>("Label1");
-            switchObject = this.FindByName<Switch>("Switch1");
-        }
 
-        public void ToggleEvent(object obj, EventArgs e)
-        {                // Perform action on clicks
-            var switchObject = obj as Switch;
-            if (switchObject.IsToggled)
-            {
-           //     progressBar.Visibility = ViewStates.Visible;
-         //       progressBar.Indeterminate = true;
-                speechService.Start();
-            }
-            else
-            {
-        //        progressBar.Indeterminate = false;
-        //        progressBar.Visibility = ViewStates.Invisible;
-                speechService.Stop();
-             /*   string text = "";
-                var result = speechService.GetResult();
-                foreach (string entry in result)
-                    text += entry + "\n";
-                Debug.WriteLine(text);*/
-            }
-        }
+            ViewGestures area = this.FindByName<ViewGestures>("Area");
 
+            Debug.WriteLine("*******************************************************");
+            Debug.WriteLine(App.ScreenWidth);
+            Debug.WriteLine(App.ScreenHeight);
+
+         //   area.SetValue( new zzz"AbsoluteLayout.LayoutBounds","10, 1, " + App.ScreenWidth + "," + App.ScreenHeight);  //      //       AbsoluteLayout.LayoutBounds="1,1, 1000, 1000"
+
+
+        }
 
         private void OnTouchDown(object sender, EventArgs args)
         {
-            Debug.WriteLine("*******************************************************");
-            Debug.WriteLine("down");
-         /*   if (speechService.IsListening)
-            {*/
+           
+            if (!speechService.IsListening())
+            {
+                Debug.WriteLine("*******************************************************");
+                 Debug.WriteLine("down");
                 //     progressBar.Visibility = ViewStates.Visible;
                 //       progressBar.Indeterminate = true;
                 speechService.Start();
-       //     }
+            }
         }
 
         private void OnTouchUp(object sender, EventArgs args)
         {
-            Debug.WriteLine("*******************************************************");
-            Debug.WriteLine("up");
+            
+            if (speechService.IsListening())
+            {
+                Debug.WriteLine("*******************************************************");
+                Debug.WriteLine("up");
+                speechService.Stop();
+            }
         }
     }
 
@@ -70,18 +64,18 @@ namespace BlindApp
     {
         public void onTaskCompleted(IList<string> result)
         {
-            string text = "";
+           // string text = "";
             if (result != null && result.Count > 0)
             {
-                text = result[0];
+                // text = result[0];
+                SpeechRecognitionPage.labelObject.Text = result[0];
             }
             else
             {
-                var start = DateTime.Now;
-                text = "Povedz daco ty debil " + start.ToString();
+                SpeechRecognitionPage.speaker.speak("Nerozoznala som nahrávku");
             }
-            SpeechRecognitionPage.switchObject.IsToggled = false;
-            SpeechRecognitionPage.labelObject.Text = text;
+
+      //      SpeechRecognitionPage.labelObject.Text = text;
         }
 
         public static int Compute(string s, string t)
@@ -225,4 +219,5 @@ namespace BlindApp
             return theResult;
         }
     }
+
 }

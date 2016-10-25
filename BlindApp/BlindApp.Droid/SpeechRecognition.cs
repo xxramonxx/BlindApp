@@ -55,9 +55,9 @@ namespace BlindApp.Droid
             isListening = false;
         }
 
-        public void IsListening()
+        public Boolean IsListening()
         {
-           // return isListening;
+            return isListening;
         }
     }
 }

@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace BlindApp
 {
-    class TextToSpeech
+    public class TextToSpeech
     {
         String language;
         CrossLocale locale;
