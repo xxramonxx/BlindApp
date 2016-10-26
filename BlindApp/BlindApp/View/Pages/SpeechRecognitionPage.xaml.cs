@@ -1,4 +1,5 @@
-﻿using ScnViewGestures.Plugin.Forms;
+﻿using BlindApp.Database.Tables;
+using ScnViewGestures.Plugin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,9 +31,9 @@ namespace BlindApp
             Debug.WriteLine(App.ScreenWidth);
             Debug.WriteLine(App.ScreenHeight);
 
-         //   area.SetValue( new zzz"AbsoluteLayout.LayoutBounds","10, 1, " + App.ScreenWidth + "," + App.ScreenHeight);  //      //       AbsoluteLayout.LayoutBounds="1,1, 1000, 1000"
-
-
+            PointsTable pointsTable = new PointsTable(Database.Initialize.DatabaseConnect());
+  //          pointsTable.Insert(new Points { UID="dass6" });
+            Debug.WriteLine(pointsTable.GetByID(1));
         }
 
         private void OnTouchDown(object sender, EventArgs args)

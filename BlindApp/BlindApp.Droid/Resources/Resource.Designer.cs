@@ -1816,6 +1816,8 @@ namespace BlindApp.Droid
 			global::ScnViewGestures.Droid.Resource.Styleable.ViewStubCompat_android_id = global::BlindApp.Droid.Resource.Styleable.ViewStubCompat_android_id;
 			global::ScnViewGestures.Droid.Resource.Styleable.ViewStubCompat_android_inflatedId = global::BlindApp.Droid.Resource.Styleable.ViewStubCompat_android_inflatedId;
 			global::ScnViewGestures.Droid.Resource.Styleable.ViewStubCompat_android_layout = global::BlindApp.Droid.Resource.Styleable.ViewStubCompat_android_layout;
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.ApplicationName = global::BlindApp.Droid.Resource.String.ApplicationName;
+			global::SQLite.Net.Platform.XamarinAndroid.Resource.String.Hello = global::BlindApp.Droid.Resource.String.Hello;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::BlindApp.Droid.Resource.Attribute.actionBarSize;
 		}
 		

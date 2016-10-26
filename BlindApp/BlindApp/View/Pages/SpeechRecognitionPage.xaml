@@ -12,7 +12,8 @@
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 LineBreakMode="WordWrap"  />
             <Label Text="I'm bottom center on every device."
-                AbsoluteLayout.LayoutBounds=".5,1,.6,.1" AbsoluteLayout.LayoutFlags="All"
+                  AbsoluteLayout.LayoutBounds=".5, 1.0"
+                  AbsoluteLayout.LayoutFlags="PositionProportional"
               />
             <BoxView Color="Red"  AbsoluteLayout.LayoutBounds="1,.5, 25, 100"
                 AbsoluteLayout.LayoutFlags="PositionProportional" />

@@ -17,6 +17,7 @@ namespace BlindApp
 
         public App()
         {
+            new Database.Initialize();
             MainPage = new MainPage();
         }
 

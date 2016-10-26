@@ -206,7 +206,7 @@ namespace BlindApp.Droid.Services
                 _data.ForEach(b =>
                 {
                     data.Add(new SharedBeacon {
-                        Id = b.Id1.ToString(),
+                        ID = b.Id1.ToInt(),
                         Minor = b.Id3.ToString(),
                         Distance = string.Format("{0:N2}m", b.Distance),
                         MAC = b.BluetoothAddress.ToString()
