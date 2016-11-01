@@ -8,16 +8,15 @@ namespace BlindApp
  
         public static int ScreenWidth;
         public static int ScreenHeight;
-        public static TextToSpeech Speaker;
 
         private IBluetoothController Bluetooth;
 
         public App()
         {
             new Database.Initialize();
+            new TextToSpeech();
 
             Bluetooth = DependencyService.Get<IBluetoothController>();
-            Speaker = new TextToSpeech();
 
             MainPage = new MainPage();
         }
@@ -28,7 +27,7 @@ namespace BlindApp
             if (!Bluetooth.IsEnabled())
             {
                 Bluetooth.Start();
-                App.Speaker.speakNext("Bluetooth zapnutý");
+                TextToSpeech.speakNext("Bluetooth zapnutý");
             }
         }
 
@@ -38,7 +37,7 @@ namespace BlindApp
             if (Bluetooth.IsEnabled())
             {
                 Bluetooth.Stop();
-                App.Speaker.speak("Bluetooth vypnutý");
+                TextToSpeech.speak("Bluetooth vypnutý");
             }
 
         }
@@ -49,7 +48,7 @@ namespace BlindApp
             if (!Bluetooth.IsEnabled())
             {
                 Bluetooth.Start();
-                App.Speaker.speak("Bluetooth zapnutý");
+                TextToSpeech.speak("Bluetooth zapnutý");
             }
         }
     }

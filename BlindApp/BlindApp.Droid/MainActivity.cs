@@ -32,10 +32,10 @@ namespace BlindApp.Droid
             ViewGesturesRenderer.Init();
             CrossTextToSpeech.Current.Init();
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+            Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }
-        
+
         #region IBeaconConsumer Implementation
         public void OnBeaconServiceConnect()
         {

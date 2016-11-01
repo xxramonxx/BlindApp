@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace BlindApp
 {
@@ -29,14 +30,21 @@ namespace BlindApp
             {
                 foreach ( var beacon in e.Data)
                 {
-                    beaconList[beacon.UID + beaconList.Count] = beacon;
-             //       beaconList[beacon.UID] = beacon;
+                    var pattern = new StringBuilder(beacon.UID + beacon.Major + beacon.Minor).ToString();
+                 //   pattern = new StringBuilder(beacon.UID + beaconList.Count).ToString(); // test purposes only
+                    if (beaconList.ContainsKey(pattern))
+                    {
+                        beaconList[pattern].UpdateData(beacon);
+                    } else {
+                        beacon.LoadAdditionalData();
+                        beaconList[pattern] = beacon;
+                    }
+                    
                 }
 
                 var sortedList = beaconList.OrderBy(b => b.Value.Distance);
                 beaconList = sortedList.ToDictionary(pair => pair.Key, pair => pair.Value);
 
-                Data = beaconList.Values.ToList();
                 OnListChanged();
             };
 
@@ -48,6 +56,8 @@ namespace BlindApp
                     if (time - beaconList[key].LastUpdate > DELETE_INTERVAL_SECONDS)
                     {
                         beaconList.Remove(key);
+                        OnListChanged();
+
                         Debug.WriteLine("Deleting beacon with UID: " + key);
                     }    
                 }
@@ -60,6 +70,7 @@ namespace BlindApp
 
         private void OnListChanged()
         {
+            Data = beaconList.Values.ToList();
             ListChanged?.Invoke(this, EventArgs.Empty);
         }
     }

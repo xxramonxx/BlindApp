@@ -27,9 +27,10 @@ namespace BlindApp.Database.Tables
 		public Boolean TableExistence() { return sqlite.GetTableInfo("DatabaseVersion").Any(); }
 
 		public void CreateTable() { sqlite.CreateTable<DatabaseVersion>(); }
-		public void DeleteTable() { sqlite.DeleteAll<DatabaseVersion>(); }
+        public void WipeTable() { sqlite.DeleteAll<DatabaseVersion>(); }
+        public void DropTable() { sqlite.DropTable<DatabaseVersion>(); }
 
-		public void Insert(DatabaseVersion project) { sqlite.Insert(project); }
+        public void Insert(DatabaseVersion project) { sqlite.Insert(project); }
 		public void Update(DatabaseVersion project) { sqlite.Update(project); }
 		public void Query(String query) { sqlite.Query<DatabaseVersion>(query); }
 		public void Delete(DatabaseVersion project) { sqlite.Delete(project); }

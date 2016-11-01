@@ -3,16 +3,14 @@ using Plugin.TextToSpeech.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace BlindApp
 {
     public class TextToSpeech
     {
-        String language;
-        CrossLocale locale;
+        static String language;
+        static CrossLocale locale;
         IEnumerable<CrossLocale> locales;
 
         public TextToSpeech()
@@ -31,7 +29,7 @@ namespace BlindApp
             }
         }
 
-        public void speak(String text)
+        public static void speak(String text)
         {
             CrossTextToSpeech.Current.Speak( text,
             //  pitch: (float)sliderPitch.Value,
@@ -41,7 +39,7 @@ namespace BlindApp
             );
         }
 
-        public void speakNext(String text)
+        public static void speakNext(String text)
         {
             CrossTextToSpeech.Current.Speak(
                 text,

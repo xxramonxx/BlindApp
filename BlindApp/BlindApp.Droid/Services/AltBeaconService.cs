@@ -141,10 +141,10 @@ namespace BlindApp.Droid.Services
                         var data = new List<SharedBeacon>();
                         beacons.ForEach(b =>
                         {
-                            data.Add(new SharedBeacon
-                            {
+                            data.Add(
+                                new SharedBeacon{
                                 UID = b.Id1.ToString(),
-                                Major = b.Id1.ToString(),
+                                Major = b.Id2.ToString(),
                                 Minor = b.Id3.ToString(),
                                 Distance = b.Distance,
                                 Rssi = b.Rssi,

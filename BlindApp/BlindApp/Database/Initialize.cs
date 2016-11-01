@@ -16,9 +16,11 @@ namespace BlindApp.Database
 		{
 			sqlite = DependencyService.Get<ISQLite>().GetConnection(DatabaseFile);
 
-			//Tables initialize
-			Tables.PointsTable pointsTable = new Tables.PointsTable(sqlite);
-			Tables.DatabaseVersionTable versionTable = new Tables.DatabaseVersionTable(sqlite);
+            //Tables initialize
+            Tables.PointsTable pointsTable = new Tables.PointsTable(sqlite);
+			Tables.DatabaseVersionTable versionTable = new Tables.DatabaseVersionTable(sqlite); // not used so far
+
+            pointsTable.DropTable();
 
             //If not exists, create new 
             if (!pointsTable.TableExistence())
@@ -32,9 +34,9 @@ namespace BlindApp.Database
 					Version = DatabaseVersion
 				});
 			}
-
-			//Check if database is actual
-			UpgradeDatabaseCheck(versionTable.ActualVersion());
+            PointsTableInitializer.Execute();
+            //Check if database is actual
+            UpgradeDatabaseCheck(versionTable.ActualVersion());
 		}
 
 		private void UpgradeDatabaseCheck(int version)

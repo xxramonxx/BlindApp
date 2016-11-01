@@ -17,7 +17,7 @@ namespace BlindApp
         {
             masterDetailPage = this;
             Master = new MenuPage();
-            Detail = new NavigationPage(new SpeechRecognitionPage());
+            Detail = new NavigationPage(new BeaconPage());
         }
 
         public static void DetailChange(String PageName)

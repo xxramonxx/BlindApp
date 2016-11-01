@@ -11,7 +11,6 @@ namespace BlindApp
     public partial class SpeechRecognitionPage : ContentPage
     {
         public static ISpeechRecognition speechService;
-        public static TextToSpeech speaker;
         public static Label labelObject;
 
         public SpeechRecognitionPage()
@@ -19,14 +18,9 @@ namespace BlindApp
             InitializeComponent();
             speechService = DependencyService.Get<ISpeechRecognition>();
             speechService.Initialize();
-            speaker = new TextToSpeech();
             labelObject = this.FindByName<Label>("Label1");
 
             ViewGestures area = this.FindByName<ViewGestures>("Area");
-
-            PointsTable pointsTable = new PointsTable(Database.Initialize.DatabaseConnect());
-            pointsTable.Insert(new Points { UID="dass6" });
-            Debug.WriteLine(pointsTable.GetByID(1));
         }
 
         private void OnTouchDown(object sender, EventArgs args)
@@ -52,19 +46,15 @@ namespace BlindApp
     {
         public void onTaskCompleted(IList<string> result)
         {
-           // string text = "";
             if (result != null && result.Count > 0)
             {
-                // text = result[0];
                 SpeechRecognitionPage.labelObject.Text = result[0];
-                App.Speaker.speak("Povedali ste " + result[0]);
+                TextToSpeech.speak("Povedali ste " + result[0]);
             }
             else
             {
-                SpeechRecognitionPage.speaker.speak("Nerozoznala som nahrávku");
+                TextToSpeech.speak("Nerozoznala som nahrávku");
             }
-
-      //      SpeechRecognitionPage.labelObject.Text = text;
         }
 
         public static int Compute(string s, string t)
