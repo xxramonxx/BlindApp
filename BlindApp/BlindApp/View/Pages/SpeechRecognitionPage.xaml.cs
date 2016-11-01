@@ -3,9 +3,6 @@ using ScnViewGestures.Plugin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
@@ -27,12 +24,8 @@ namespace BlindApp
 
             ViewGestures area = this.FindByName<ViewGestures>("Area");
 
-            Debug.WriteLine("*******************************************************");
-            Debug.WriteLine(App.ScreenWidth);
-            Debug.WriteLine(App.ScreenHeight);
-
             PointsTable pointsTable = new PointsTable(Database.Initialize.DatabaseConnect());
-  //          pointsTable.Insert(new Points { UID="dass6" });
+            pointsTable.Insert(new Points { UID="dass6" });
             Debug.WriteLine(pointsTable.GetByID(1));
         }
 
@@ -41,10 +34,6 @@ namespace BlindApp
            
             if (!speechService.IsListening())
             {
-                Debug.WriteLine("*******************************************************");
-                 Debug.WriteLine("down");
-                //     progressBar.Visibility = ViewStates.Visible;
-                //       progressBar.Indeterminate = true;
                 speechService.Start();
             }
         }
@@ -54,8 +43,6 @@ namespace BlindApp
             
             if (speechService.IsListening())
             {
-                Debug.WriteLine("*******************************************************");
-                Debug.WriteLine("up");
                 speechService.Stop();
             }
         }
@@ -70,6 +57,7 @@ namespace BlindApp
             {
                 // text = result[0];
                 SpeechRecognitionPage.labelObject.Text = result[0];
+                App.Speaker.speak("Povedali ste " + result[0]);
             }
             else
             {

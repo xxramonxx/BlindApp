@@ -29,10 +29,10 @@ namespace BlindApp.Droid
             App.ScreenWidth = (int)Resources.DisplayMetrics.WidthPixels; // real pixels
             App.ScreenHeight = (int)Resources.DisplayMetrics.HeightPixels; // real pixels
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);
             ViewGesturesRenderer.Init();
             CrossTextToSpeech.Current.Init();
 
+            global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }
         

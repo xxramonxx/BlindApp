@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Android.App;
 using System.Diagnostics;
+using Android.OS;
 
 [assembly: Xamarin.Forms.Dependency(typeof(AltBeaconService))]
 
@@ -14,24 +15,23 @@ namespace BlindApp.Droid.Services
 {
     public class AltBeaconService : Java.Lang.Object, IAltBeaconService
     {
+        private const long SCAN_INTERVAL = 500;
+
         private readonly MonitorNotifier _monitorNotifier;
         private readonly RangeNotifier _rangeNotifier;
+
         private BeaconManager _beaconManager;
+        
+        public event EventHandler<ListChangedEventArgs> ListChanged;
 
         Region _tagRegion;
         Region _emptyRegion;
-
-        private readonly List<Beacon> _data;
-
+   
         public AltBeaconService()
         {
             _monitorNotifier = new MonitorNotifier();
             _rangeNotifier = new RangeNotifier();
-            _data = new List<Beacon>();
         }
-
-        public event EventHandler<ListChangedEventArgs> ListChanged;
-        public event EventHandler DataClearing;
 
         public BeaconManager BeaconManagerImpl
         {
@@ -77,7 +77,7 @@ namespace BlindApp.Droid.Services
 
         public void StartMonitoring()
         {
-            BeaconManagerImpl.SetForegroundBetweenScanPeriod(1000);
+            BeaconManagerImpl.SetForegroundBetweenScanPeriod(SCAN_INTERVAL);
 
             BeaconManagerImpl.SetMonitorNotifier(_monitorNotifier);
             _beaconManager.StartMonitoringBeaconsInRegion(_tagRegion);
@@ -86,7 +86,7 @@ namespace BlindApp.Droid.Services
 
         public void StartRanging()
         {
-            BeaconManagerImpl.SetForegroundBetweenScanPeriod(1000);
+            BeaconManagerImpl.SetForegroundBetweenScanPeriod(SCAN_INTERVAL);
 
             BeaconManagerImpl.SetRangeNotifier(_rangeNotifier);
             _beaconManager.StartRangingBeaconsInRegion(_tagRegion);
@@ -122,23 +122,9 @@ namespace BlindApp.Droid.Services
 
         async void RangingBeaconsInRegion(object sender, RangeEventArgs e)
         {
-            await ClearData();
-
-            var allBeacons = new List<Beacon>();
             if (e.Beacons.Count > 0)
             {
-                foreach (var b in e.Beacons)
-                {
-                    allBeacons.Add(b);
-                }
-
-                var orderedBeacons = allBeacons.OrderBy(b => b.Distance).ToList();
-                await UpdateData(orderedBeacons);
-            }
-            else
-            {
-                // unknown
-                await ClearData();
+                await UpdateData(e.Beacons.ToList());
             }
         }
 
@@ -146,74 +132,29 @@ namespace BlindApp.Droid.Services
         {
             await Task.Run(() =>
             {
-                var newBeacons = new List<Beacon>();
-                foreach (var beacon in beacons)
+                var handler = ListChanged;
+                if (handler != null)
                 {
-                    if (_data.All(b => b.Id1.ToString() == beacon.Id1.ToString()))
+                    ((Activity)Xamarin.Forms.Forms.Context).RunOnUiThread(() =>
                     {
-                        newBeacons.Add(beacon);
-                    }
-                }
-
-                ((Activity)Xamarin.Forms.Forms.Context).RunOnUiThread(() =>
-                {
-                    foreach (var beacon in newBeacons)
-                    {
-                        _data.Add(beacon);
-                    }
-
-                    if (newBeacons.Count > 0)
-                    {
-                        _data.Sort((x, y) => x.Distance.CompareTo(y.Distance));
-                        UpdateList();
-                    }
-                });
-            });
-        }
-
-        private async Task ClearData()
-        {
-            ((Activity)Xamarin.Forms.Forms.Context).RunOnUiThread(() =>
-            {
-   //             _data.Clear();
-                OnDataClearing();
-            });
-        }
-
-        private void OnDataClearing()
-        {
-            var handler = DataClearing;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
-        }
-
-        private void UpdateList()
-        {
-            ((Activity)Xamarin.Forms.Forms.Context).RunOnUiThread(() =>
-            {
-                OnListChanged();
-            });
-        }
-
-        private void OnListChanged()
-        {
-            var handler = ListChanged;
-            if (handler != null)
-            {
-                var data = new List<SharedBeacon>();
-                _data.ForEach(b =>
-                {
-                    data.Add(new SharedBeacon {
-                        ID = b.Id1.ToInt(),
-                        Minor = b.Id3.ToString(),
-                        Distance = string.Format("{0:N2}m", b.Distance),
-                        MAC = b.BluetoothAddress.ToString()
+                        // transform data from service to Shared code
+                        var data = new List<SharedBeacon>();
+                        beacons.ForEach(b =>
+                        {
+                            data.Add(new SharedBeacon
+                            {
+                                UID = b.Id1.ToString(),
+                                Major = b.Id1.ToString(),
+                                Minor = b.Id3.ToString(),
+                                Distance = b.Distance,
+                                Rssi = b.Rssi,
+                                MAC = b.BluetoothAddress.ToString()
+                            });
+                        });
+                        handler(this, new ListChangedEventArgs(data));
                     });
-                });
-                handler(this, new ListChangedEventArgs(data));
-            }
+                }
+            });
         }
     }
 }

@@ -5,20 +5,20 @@ namespace BlindApp
     public class BeaconPage : ContentPage
     {
         ListView _list;
-        BeaconViewModel _viewModel;
+        BeaconViewModel ViewModel;
 
         public BeaconPage()
         {
             BackgroundColor = Color.White;
-            Title = "AltBeacon Forms Sample";
+            Title = "Beacon locator";
 
-            _viewModel = new BeaconViewModel();
-            _viewModel.ListChanged += (sender, e) =>
+            ViewModel = new BeaconViewModel();
+            ViewModel.ListChanged += (sender, e) =>
             {
-                _list.ItemsSource = _viewModel.Data;
+                _list.ItemsSource = ViewModel.Data;
             };
 
-            BindingContext = _viewModel;
+            BindingContext = ViewModel;
             Content = BuildContent();
         }
 
@@ -28,7 +28,7 @@ namespace BlindApp
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 ItemTemplate = new DataTemplate(typeof(ListItemView)),
-                RowHeight = 180,
+                RowHeight = 200,
             };
 
             _list.SetBinding(ListView.ItemsSourceProperty, "Data");
@@ -39,7 +39,7 @@ namespace BlindApp
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            _viewModel.Init();
+            ViewModel.Init();
         }
     }
 }

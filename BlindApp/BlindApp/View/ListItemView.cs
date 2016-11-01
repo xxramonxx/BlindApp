@@ -28,7 +28,7 @@ namespace BlindApp
                 FontSize = 17
             };
 
-            beaconId.SetBinding(Label.TextProperty, "Id");
+            beaconId.SetBinding(Label.TextProperty, "UID");
 
             var beaconIdLayout = new StackLayout
             {
@@ -64,6 +64,28 @@ namespace BlindApp
 
             viewLayout.Children.Add(beaconMinorLayout);
 
+            var beaconAge = new Label
+            {
+                Text = "MAC",
+                TextColor = Color.Black,
+                FontFamily = "sans-serif",
+                FontSize = 17
+            };
+
+            beaconAge.SetBinding(Label.TextProperty, "LastUpdate");
+
+            var beaconAgeLayout = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.End,
+                VerticalOptions = LayoutOptions.End,
+                Spacing = 0,
+                Padding = new Thickness(0, 10, 10, 5),
+                Children = { beaconAge }
+            };
+
+            viewLayout.Children.Add(beaconAgeLayout);
+
             var beaconMAC = new Label
             {
                 Text = "MAC",
@@ -94,7 +116,7 @@ namespace BlindApp
                 FontSize = 36
             };
 
-            beaconDistance.SetBinding(Label.TextProperty, "Distance");
+            beaconDistance.SetBinding(Label.TextProperty, "FormatedDistance");
 
             var beaconDistanceLayout = new StackLayout
             {

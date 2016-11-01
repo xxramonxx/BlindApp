@@ -12,6 +12,5 @@ namespace BlindApp
         void StopRanging();
 
         event EventHandler<ListChangedEventArgs> ListChanged;
-        event EventHandler DataClearing;
     }
 }
