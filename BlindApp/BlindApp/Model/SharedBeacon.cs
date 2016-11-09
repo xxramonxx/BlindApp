@@ -18,10 +18,10 @@ namespace BlindApp
         public long LastUpdate { get; set; }
         //Data from database
         public int ID { get; set; }
-        public string XCoordinate { get; set; }
-        public string YCoordinate { get; set; }
-        public string ZCoordinate { get; set; }
-        public string Floor { get; set; }
+        public double XCoordinate { get; set; }
+        public double YCoordinate { get; set; }
+        public double ZCoordinate { get; set; }
+        public double Floor { get; set; }
 //        public Array Properties { get; set; }
         // Extra data //
         public string FormatedDistance
@@ -52,12 +52,14 @@ namespace BlindApp
                 "select * from Points Where UID='" + UID +
                 "' AND Minor=" + Minor + " AND Major=" + this.Major
                 );
-
-            ID = additionalData.ID;
-            XCoordinate = additionalData.XCoordinate;
-            YCoordinate = additionalData.YCoordinate;
-            ZCoordinate = additionalData.ZCoordinate;
-            Floor = additionalData.Floor;
+            if (additionalData != null)
+            {
+                ID = additionalData.ID;
+                XCoordinate = Double.Parse(additionalData.XCoordinate);
+                YCoordinate = Double.Parse(additionalData.YCoordinate);
+                ZCoordinate = Double.Parse(additionalData.ZCoordinate);
+                Floor = Double.Parse(additionalData.Floor);
+            }
         }
     }
 }

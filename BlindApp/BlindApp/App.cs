@@ -10,6 +10,7 @@ namespace BlindApp
         public static int ScreenHeight;
 
         private IBluetoothController Bluetooth;
+        private bool initBTstate;
 
         public App()
         {
@@ -19,12 +20,14 @@ namespace BlindApp
             Bluetooth = DependencyService.Get<IBluetoothController>();
 
             MainPage = new MainPage();
+
         }
        
         protected override void OnStart()
         {
+            initBTstate = Bluetooth.IsEnabled();
             // Handle when your app starts
-            if (!Bluetooth.IsEnabled())
+            if (!initBTstate)
             {
                 Bluetooth.Start();
                 TextToSpeech.speakNext("Bluetooth zapnutý");
@@ -34,7 +37,7 @@ namespace BlindApp
         protected override void OnSleep()
         {
             // Handle when your app sleeps
-            if (Bluetooth.IsEnabled())
+            if (Bluetooth.IsEnabled() && initBTstate == false)
             {
                 Bluetooth.Stop();
                 TextToSpeech.speak("Bluetooth vypnutý");

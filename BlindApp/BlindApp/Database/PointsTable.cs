@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace BlindApp.Database.Tables
 {
 	[Table("Points")]
-	public class Points
+	public class Point
     {
         [PrimaryKey, AutoIncrement, Column("ID")]
 		public int ID { get; set; }
@@ -33,19 +33,19 @@ namespace BlindApp.Database.Tables
 
 		public Boolean TableExistence() { return sqlite.GetTableInfo("Points").Any(); }
 
-		public void CreateTable() { sqlite.CreateTable<Points>(); }
-		public void WipeTable() { sqlite.DeleteAll<Points>(); }
-        public void DropTable() { sqlite.DropTable<Points>(); }
+		public void CreateTable() { sqlite.CreateTable<Point>(); }
+		public void WipeTable() { sqlite.DeleteAll<Point>(); }
+        public void DropTable() { sqlite.DropTable<Point>(); }
 
-        public void Insert(Points project) { sqlite.Insert(project); }
-		public void Update(Points project) { sqlite.Update(project); }
+        public void Insert(Point project) { sqlite.Insert(project); }
+		public void Update(Point project) { sqlite.Update(project); }
 		public void Execute(String query) { sqlite.Execute(query); } 
-		public void Delete(Points project) { sqlite.Delete(project); }
+		public void Delete(Point project) { sqlite.Delete(project); }
 
-		public Points SelectSingleRow(String query) { return sqlite.Query<Points>(query).FirstOrDefault();}
-		public List<Points> SelectMoreRows(String query) { return sqlite.Query<Points>(query); }
+		public Point SelectSingleRow(String query) { return sqlite.Query<Point>(query).FirstOrDefault();}
+		public List<Point> SelectMoreRows(String query) { return sqlite.Query<Point>(query); }
 
-		public Points GetByID(int ID) { return sqlite.Get<Points>(ID); }
+		public Point GetByID(int ID) { return sqlite.Get<Point>(ID); }
 
         public int GetLastID() { return sqlite.ExecuteScalar<int>("SELECT last_insert_rowid()"); }
 	}

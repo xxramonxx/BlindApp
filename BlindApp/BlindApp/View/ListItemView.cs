@@ -42,6 +42,26 @@ namespace BlindApp
 
             viewLayout.Children.Add(beaconIdLayout);
 
+            var beaconID = new Label
+            {
+                Text = "ID",
+                TextColor = Color.Black,
+                FontFamily = "sans-serif",
+                FontSize = 17
+            };
+
+            beaconID.SetBinding(Label.TextProperty, "ID");
+
+            var beaconMajor = new Label
+            {
+                Text = "Minor",
+                TextColor = Color.Black,
+                FontFamily = "sans-serif",
+                FontSize = 17
+            };
+
+            beaconMajor.SetBinding(Label.TextProperty, "Major");
+
             var beaconMinor = new Label
             {
                 Text = "Minor",
@@ -51,18 +71,6 @@ namespace BlindApp
             };
 
             beaconMinor.SetBinding(Label.TextProperty, "Minor");
-
-            var beaconMinorLayout = new StackLayout
-            {
-                Orientation = StackOrientation.Horizontal,
-                HorizontalOptions = LayoutOptions.End,
-                VerticalOptions = LayoutOptions.End,
-                Spacing = 0,
-                Padding = new Thickness(0, 10, 10, 5),
-                Children = { beaconMinor }
-            };
-
-            viewLayout.Children.Add(beaconMinorLayout);
 
             var beaconAge = new Label
             {
@@ -74,17 +82,17 @@ namespace BlindApp
 
             beaconAge.SetBinding(Label.TextProperty, "LastUpdate");
 
-            var beaconAgeLayout = new StackLayout
+            var beaconInfoLayout = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.End,
                 VerticalOptions = LayoutOptions.End,
-                Spacing = 0,
+                Spacing = 20,
                 Padding = new Thickness(0, 10, 10, 5),
-                Children = { beaconAge }
+                Children = { beaconID, beaconMajor, beaconMinor, beaconAge }
             };
 
-            viewLayout.Children.Add(beaconAgeLayout);
+            viewLayout.Children.Add(beaconInfoLayout);
 
             var beaconMAC = new Label
             {
@@ -123,7 +131,7 @@ namespace BlindApp
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.End,
                 Spacing = 0,
-                Padding = new Thickness(0, 0, 10, 10),
+            //    Padding = new Thickness(0, 0, 0, 50),
                 Children = { beaconDistance }
             };
 

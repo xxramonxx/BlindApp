@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace BlindApp.Database
 {
-    class PointsTableInitializer
+    static class PointsTableInitializer
     {
         public static void Execute()
         {
@@ -26,7 +26,7 @@ namespace BlindApp.Database
             {
                 var attributes = entry.Split(';');
                 pointsTable.Insert(
-                    new Points {
+                    new Point {
                         UID = attributes[0],
                         Major = attributes[1],
                         Minor = attributes[2],

@@ -5,20 +5,21 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Text;
+using BlindApp.Model;
 
 namespace BlindApp
 {
     public class BeaconViewModel
     {
-        private readonly int DELETE_INTERVAL_SECONDS = 5;
+        private readonly int DELETE_INTERVAL_SECONDS = 50;
         private Dictionary<string, SharedBeacon> beaconList;
 
         public event EventHandler ListChanged;   
-        public List<SharedBeacon> Data { get; set; }
+        public List<SharedBeacon> VisibleData { get; set; }
 
         public BeaconViewModel()
         {
-            Data = new List<SharedBeacon>();
+            VisibleData = new List<SharedBeacon>();
             beaconList = new Dictionary<string, SharedBeacon>();
         }
 
@@ -48,7 +49,15 @@ namespace BlindApp
                 OnListChanged();
             };
 
-            Device.StartTimer( TimeSpan.FromSeconds(1), () => {
+            InitAgingAlgorithm();
+            InitLocationService();
+
+            beaconService.InitializeService();
+        }
+
+        private void InitAgingAlgorithm()
+        {
+            Device.StartTimer(TimeSpan.FromSeconds(1), () => {
                 // Beacons aging algorithm
                 var time = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
                 foreach (var key in beaconList.Keys.ToList())
@@ -59,18 +68,45 @@ namespace BlindApp
                         OnListChanged();
 
                         Debug.WriteLine("Deleting beacon with UID: " + key);
-                    }    
+                    }
                 }
                 // Returning true means you want to repeat this timer
                 return true;
             });
-
-            beaconService.InitializeService();
         }
+
+        private void InitLocationService()
+        {
+            Device.StartTimer(TimeSpan.FromSeconds(2), () => {
+                Debug.WriteLine(beaconList.Count);
+                if (beaconList.Count >= 3)
+                {
+                    Position.findCenter(beaconList.Values.ToList());
+
+                    Debug.WriteLine("Deleting beacon with UID: " + Position.XCoordinate);
+                }
+                // Beacons aging algorithm
+                var time = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
+                foreach (var key in beaconList.Keys.ToList())
+                {
+                    if (time - beaconList[key].LastUpdate > DELETE_INTERVAL_SECONDS)
+                    {
+                        beaconList.Remove(key);
+                        OnListChanged();
+
+                        Debug.WriteLine("Deleting beacon with UID: " + key);
+                    }
+                }
+                // Returning true means you want to repeat this timer
+                return true;
+            });
+        }
+
+      
 
         private void OnListChanged()
         {
-            Data = beaconList.Values.ToList();
+            VisibleData = beaconList.Values.ToList();
             ListChanged?.Invoke(this, EventArgs.Empty);
         }
     }

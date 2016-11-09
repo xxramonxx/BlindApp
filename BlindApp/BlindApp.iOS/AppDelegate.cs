@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using ScnViewGestures.Plugin.Forms.iOS.Renderers;
 
 namespace BlindApp.iOS
 {
@@ -26,6 +27,7 @@ namespace BlindApp.iOS
             ViewGesturesRenderer.Init();
             LoadApplication(new App());
 
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
             App.ScreenWidth = (int)UIScreen.MainScreen.Bounds.Width;
             App.ScreenHeight = (int)UIScreen.MainScreen.Bounds.Height;
 

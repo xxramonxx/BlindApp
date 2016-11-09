@@ -18,15 +18,23 @@ namespace BlindApp.Database
 
             //Tables initialize
             Tables.PointsTable pointsTable = new Tables.PointsTable(sqlite);
-			Tables.DatabaseVersionTable versionTable = new Tables.DatabaseVersionTable(sqlite); // not used so far
-
-            pointsTable.DropTable();
+            Tables.TargetsTable targetsTable = new Tables.TargetsTable(sqlite);
+            Tables.DatabaseVersionTable versionTable = new Tables.DatabaseVersionTable(sqlite); // not used so far
 
             //If not exists, create new 
-            if (!pointsTable.TableExistence())
-                pointsTable.CreateTable();
+            if (pointsTable.TableExistence())
+            {
+                pointsTable.DropTable();
+            }
+            pointsTable.CreateTable();
+            if (targetsTable.TableExistence())
+            {
+                targetsTable.DropTable();
+            }
+            targetsTable.CreateTable();
 
-			if (!versionTable.TableExistence())
+
+            if (!versionTable.TableExistence())
 			{
 				versionTable.CreateTable();
 				versionTable.Insert(new Tables.DatabaseVersion
@@ -35,6 +43,7 @@ namespace BlindApp.Database
 				});
 			}
             PointsTableInitializer.Execute();
+            TargetsTableInitializer.Execute();
             //Check if database is actual
             UpgradeDatabaseCheck(versionTable.ActualVersion());
 		}

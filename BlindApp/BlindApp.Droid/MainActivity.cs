@@ -7,17 +7,20 @@ using AltBeaconOrg.BoundBeacon;
 using Android.OS;
 using Plugin.TextToSpeech;
 using ScnViewGestures.Plugin.Forms.Droid.Renderers;
-using Android.Util;
+using Android.Content;
+using Android.Views;
 
 namespace BlindApp.Droid
 {
     [Activity(
         Label = "BlindApp",
         Icon = "@drawable/icon",
-      //  MainLauncher = true,
+ /*       MainLauncher = true,
+        NoHistory = true,*/
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
         Theme = "@style/MyTheme"
         )]
+
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity, IBeaconConsumer
     {
         private IAltBeaconService beaconService;
@@ -25,6 +28,7 @@ namespace BlindApp.Droid
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+            Window.SetFlags(WindowManagerFlags.KeepScreenOn, WindowManagerFlags.KeepScreenOn);
 
             App.ScreenWidth = (int)Resources.DisplayMetrics.WidthPixels; // real pixels
             App.ScreenHeight = (int)Resources.DisplayMetrics.HeightPixels; // real pixels
