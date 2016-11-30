@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:BlindApp="clr-namespace:ScnViewGestures.Plugin.Forms;assembly=ScnViewGestures"
+             x:Class="BlindApp.Views.Pages.IntroPage">
+  <StackLayout>
+    <Label 
+        x:Name="title"
+        Text="Čo hľadáte ?"
+        FontSize="20"
+        TextColor="Black"
+        VerticalOptions="Center" 
+        HorizontalOptions="Center" />
+    <AbsoluteLayout
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <Button       
+          x:Name="Person"
+          Text="Osobu"
+          Clicked="PageDetailChange"
+          BorderColor="Blue"
+          BorderRadius="5"
+          BorderWidth="20"
+          BackgroundColor="#428ff4" 
+          TextColor="Black"
+          Margin="10,0,10,0"
+          AbsoluteLayout.LayoutBounds=".0, .0, 1.0, 1.0"
+          AbsoluteLayout.LayoutFlags="All" />
+    </AbsoluteLayout>
+    <AbsoluteLayout
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <Button 
+          Text="Miestnosť"
+          x:Name="Room"
+          Clicked="PageDetailChange"
+          BackgroundColor="#428ff4"
+          BorderColor="Blue"
+          BorderRadius="5"
+          BorderWidth="20"
+          TextColor="Black"
+          Margin="10,0,10,0"
+          AbsoluteLayout.LayoutBounds=".0, .0, 1.0, 1.0"
+          AbsoluteLayout.LayoutFlags="All" />
+    </AbsoluteLayout>
+     <AbsoluteLayout
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill">
+        <BlindApp:ViewGestures 
+              x:Name="Area"
+              BackgroundColor="Blue"
+              AbsoluteLayout.LayoutBounds="0,0, 1, 1"
+              AbsoluteLayout.LayoutFlags="All"
+              TouchBegan="OnTouchDown" 
+              TouchEnded="OnTouchUp" 
+            />     
+        <Label       
+          Text="Stlač a hovor"
+          LineBreakMode="WordWrap"
+          FontSize="20"
+          TextColor="Black"
+          VerticalOptions="FillAndExpand" 
+          HorizontalOptions="Center"
+          AbsoluteLayout.LayoutBounds="0, 0.5, 1.0, .2"
+          AbsoluteLayout.LayoutFlags="All" />  
+      </AbsoluteLayout>
+  </StackLayout>
+</ContentPage>

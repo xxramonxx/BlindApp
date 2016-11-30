@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace BlindApp
+namespace BlindApp.Views
 {
     public class ListItemView : ViewCell
     {

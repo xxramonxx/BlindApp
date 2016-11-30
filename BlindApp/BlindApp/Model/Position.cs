@@ -17,8 +17,13 @@ namespace BlindApp.Model
         public static string ZCoordinate { get; set; }
 
         public static string Floor { get; set; }
-        public static string Direction { get; set; }
-        public static int nextMilestone { get; set; }
+        public static bool goodDirection { get; set; }
+
+        private static long LastDirectionUpdate; 
+
+        // direction change : substract begin vector as 0 and new trilat vector
+
+        // direction change / (now - last direction update) = speed 
 
         public static double Trilateration(List<SharedBeacon> bestBeacons)
         {
@@ -86,7 +91,7 @@ namespace BlindApp.Model
             return 0;
         }
 
-        public static double findCenter(List<SharedBeacon> bestBeacons)
+        public static double find(List<SharedBeacon> bestBeacons)
         {
             double top = 0;
             double bot = 0;

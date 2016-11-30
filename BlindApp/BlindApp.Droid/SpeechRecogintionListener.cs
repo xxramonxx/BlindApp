@@ -14,6 +14,7 @@ using Android.Util;
 using System.Threading.Tasks;
 using Java.Util;
 using Java.Lang;
+using BlindApp.Views.Pages;
 
 namespace BlindApp.Droid
 {

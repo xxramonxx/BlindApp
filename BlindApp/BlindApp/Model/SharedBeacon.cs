@@ -3,6 +3,7 @@ using BlindApp.Database;
 using BlindApp.Database.Tables;
 using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace BlindApp
 {
@@ -29,10 +30,16 @@ namespace BlindApp
             get { return string.Format("{0:N2}m", Distance); }
         }
 
-
         public SharedBeacon()
         {
             LastUpdate = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
+        }
+
+        public override string ToString()
+        {
+            var SB = new StringBuilder();
+            SB.Append(UID).Append("-").Append(Major).Append("-").Append(Minor);
+            return SB.ToString();
         }
 
         public void UpdateData(SharedBeacon Beacon)

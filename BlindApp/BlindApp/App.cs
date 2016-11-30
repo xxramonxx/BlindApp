@@ -1,4 +1,5 @@
 ﻿using BlindApp.Interfaces;
+using BlindApp.Views.Pages;
 using Xamarin.Forms;
 
 namespace BlindApp

@@ -81,21 +81,7 @@ namespace BlindApp
                 Debug.WriteLine(beaconList.Count);
                 if (beaconList.Count >= 3)
                 {
-                    Position.findCenter(beaconList.Values.ToList());
-
-                    Debug.WriteLine("Deleting beacon with UID: " + Position.XCoordinate);
-                }
-                // Beacons aging algorithm
-                var time = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
-                foreach (var key in beaconList.Keys.ToList())
-                {
-                    if (time - beaconList[key].LastUpdate > DELETE_INTERVAL_SECONDS)
-                    {
-                        beaconList.Remove(key);
-                        OnListChanged();
-
-                        Debug.WriteLine("Deleting beacon with UID: " + key);
-                    }
+                    Position.find(beaconList.Values.ToList());
                 }
                 // Returning true means you want to repeat this timer
                 return true;

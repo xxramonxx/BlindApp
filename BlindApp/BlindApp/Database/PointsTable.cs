@@ -4,6 +4,7 @@ using System.Linq;
 using SQLite.Net;
 using SQLite.Net.Attributes;
 using System.Diagnostics;
+using System.Text;
 
 namespace BlindApp.Database.Tables
 {
@@ -19,7 +20,13 @@ namespace BlindApp.Database.Tables
         public string YCoordinate { get; set; }
         public string ZCoordinate { get; set; }
         public string Floor { get; set; }
-        //      public List<String> Properties { get; set; }
+
+        public override string ToString()
+        {
+            var SB = new StringBuilder();
+            SB.Append(this.UID).Append("-").Append(this.Major).Append("-").Append(this.Minor);
+            return SB.ToString();
+        }
     }
 
 	public class PointsTable

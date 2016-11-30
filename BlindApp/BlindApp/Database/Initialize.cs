@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Prototyper.Interface;
 using SQLite.Net;
 using Xamarin.Forms;
+using BlindApp.Model;
 
 namespace BlindApp.Database
 {
@@ -19,6 +20,7 @@ namespace BlindApp.Database
             //Tables initialize
             Tables.PointsTable pointsTable = new Tables.PointsTable(sqlite);
             Tables.TargetsTable targetsTable = new Tables.TargetsTable(sqlite);
+            Tables.PathsTable pathsTable = new Tables.PathsTable(sqlite);
             Tables.DatabaseVersionTable versionTable = new Tables.DatabaseVersionTable(sqlite); // not used so far
 
             //If not exists, create new 
@@ -27,12 +29,18 @@ namespace BlindApp.Database
                 pointsTable.DropTable();
             }
             pointsTable.CreateTable();
+
             if (targetsTable.TableExistence())
             {
                 targetsTable.DropTable();
             }
             targetsTable.CreateTable();
 
+            if (pathsTable.TableExistence())
+            {
+                pathsTable.DropTable();
+            }
+            pathsTable.CreateTable();
 
             if (!versionTable.TableExistence())
 			{
@@ -44,7 +52,11 @@ namespace BlindApp.Database
 			}
             PointsTableInitializer.Execute();
             TargetsTableInitializer.Execute();
-            //Check if database is actual
+            PathsTableInitializer.Execute();
+
+            Map.Init();
+
+            //Check if database is up-to-date
             UpgradeDatabaseCheck(versionTable.ActualVersion());
 		}
 

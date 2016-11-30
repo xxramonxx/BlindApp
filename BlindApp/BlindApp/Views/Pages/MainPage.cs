@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 
 using Xamarin.Forms;
 
-namespace BlindApp
+namespace BlindApp.Views.Pages
 {
     public class MainPage : MasterDetailPage
     {
@@ -17,7 +12,7 @@ namespace BlindApp
         {
             masterDetailPage = this;
             Master = new MenuPage();
-            Detail = new NavigationPage(new BeaconPage());
+            Detail = new NavigationPage(new IntroPage());
         }
 
         public static void DetailChange(String PageName)

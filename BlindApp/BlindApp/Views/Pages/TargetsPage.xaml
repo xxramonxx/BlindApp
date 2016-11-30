@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:BlindApp="clr-namespace:ScnViewGestures.Plugin.Forms;assembly=ScnViewGestures"
+             x:Class="BlindApp.Views.Pages.TargetsPage">
+  <StackLayout>
+    <Label
+        Text="Zoznam položiek"
+        FontSize="20"
+        TextColor="Black"
+        VerticalOptions="Center"
+        HorizontalOptions="Center" />
+    <ListView           
+        x:Name="ListView"
+        VerticalOptions="FillAndExpand" 
+        HorizontalOptions="FillAndExpand">
+    </ListView>
+    <AbsoluteLayout
+    HorizontalOptions="Fill"
+    VerticalOptions="Fill">
+      <BlindApp:ViewGestures 
+        x:Name="Area"
+
+        BackgroundColor="Blue"
+        AbsoluteLayout.LayoutBounds="0,0, 1, 1"
+        AbsoluteLayout.LayoutFlags="All"
+        TouchBegan="OnTouchDown" 
+        TouchEnded="OnTouchUp" 
+      />         
+    <Label       
+      Text="Stlač a hovor"
+      LineBreakMode="WordWrap"
+      FontSize="20"
+      TextColor="Black"
+      VerticalOptions="FillAndExpand" 
+      HorizontalOptions="Center"
+      AbsoluteLayout.LayoutBounds="0, 0.5, 1.0, .2"
+      AbsoluteLayout.LayoutFlags="All" />  
+  </AbsoluteLayout>
+  </StackLayout>
+</ContentPage>

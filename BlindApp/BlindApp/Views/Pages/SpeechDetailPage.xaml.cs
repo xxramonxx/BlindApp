@@ -2,7 +2,7 @@
 using Xamarin.Forms;
 using Plugin.Vibrate;
 
-namespace BlindApp
+namespace BlindApp.Views.Pages
 {
     public partial class SpeechDetailPage : ContentPage
     {

@@ -1,15 +1,18 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using BlindApp.Model;
+using MathNet.Numerics.LinearAlgebra;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System;
 using Xamarin.Forms;
-namespace BlindApp
+
+namespace BlindApp.Views.Pages
 {
     public class BeaconPage : ContentPage
     {
         ListView _list;
-        BeaconViewModel ViewModel;
+        BeaconViewModel ViewModel;  
 
-        private SKMatrix _m = SKMatrix.MakeIdentity();
+        SKMatrix _m = SKMatrix.MakeIdentity();
 
         public BeaconPage()
         {

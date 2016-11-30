@@ -1,8 +1,7 @@
 ﻿using BlindApp.Database.Tables;
-using System.Diagnostics;
+using BlindApp.Model;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace BlindApp.Database
 {
@@ -36,14 +35,16 @@ namespace BlindApp.Database
                     Room = 0;
                 }
                 pointsTable.Insert(
-                    new Target {        
-                        Employee = attributes[0],
+                    new Target {
+                        Employee = attributes[0].ToLower().CapitalizeFirstLetters(), // remove accents
+                        EmployeeParsed = attributes[0].ToLower().RemoveDiacritics(),
                         Office = attributes[1],
                         Floor = int.Parse(attributes[2]),
                         Room = Room,
+                        Minor = int.Parse(attributes[3]),
                     }
                 );
             }
-        }
+        }  
     }
 }
