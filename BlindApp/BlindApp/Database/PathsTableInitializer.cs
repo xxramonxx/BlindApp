@@ -13,7 +13,7 @@ namespace BlindApp.Database
     {
         public static void Execute()
         {
-            PathsTable pathsTable = new PathsTable(Initialize.DatabaseConnect());
+            PathsTable pathsTable = new PathsTable(Initializer.DatabaseConnect());
             var assembly = typeof(PathsTableInitializer).GetTypeInfo().Assembly;
             string[] names = assembly.GetManifestResourceNames();
             Stream stream = assembly.GetManifestResourceStream("BlindApp.Sources.beacons_connections.csv");

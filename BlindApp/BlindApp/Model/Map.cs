@@ -20,7 +20,8 @@ namespace BlindApp.Model
             nodeMap = new Dictionary<string, Node<Point>>();
 
             // TODO: Iitialize by first captured beacon group number
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
 
                 CreateNodes();
                 CreateEdges();
@@ -28,12 +29,12 @@ namespace BlindApp.Model
                 initialized = true;
             });
             //        Find("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-42", "DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-38"); 
-          //  FindUsingHeap("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-13", "B9407F30-F5F8-466E-AFF9-25556B57FE6D-36295-11950");
+            //  FindUsingHeap("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-13", "B9407F30-F5F8-466E-AFF9-25556B57FE6D-36295-11950");
         }
 
         private static void CreateNodes()
         {
-            PointsTable beaconsTable = new PointsTable(Initialize.DatabaseConnect());
+            PointsTable beaconsTable = new PointsTable(Initializer.DatabaseConnect());
             var beaconList = beaconsTable.SelectMoreRows("select * from Points");
 
             foreach (var beacon in beaconList)
@@ -46,7 +47,7 @@ namespace BlindApp.Model
 
         private static void CreateEdges()
         {
-            PathsTable pathsTable = new PathsTable(Initialize.DatabaseConnect());
+            PathsTable pathsTable = new PathsTable(Initializer.DatabaseConnect());
 
             foreach (var node in nodeMap.Values)
             {
@@ -70,13 +71,16 @@ namespace BlindApp.Model
 
         public static Node<Point> FindUsingHeap(string from, string to)
         {
+            InitNodes();
             if (initialized != true)
-                throw new Exception("Map not initialized");          
+                throw new Exception("Map not initialized");
 
             var heap = new Heap<Node<Point>>();
 
-            nodeMap[from].PathPrice = 0;
-            heap.Add(nodeMap[from]);
+            var localNodeMap = new Dictionary<string, Node<Point>>(nodeMap);
+
+            localNodeMap[from].PathPrice = 0;
+            heap.Add(localNodeMap[from]);
 
             while (heap.size > 0)
             {
@@ -110,14 +114,14 @@ namespace BlindApp.Model
         public static string FindUsingQueue(string from, string to)
         {
             var queue = new Queue<Node<Point>>();
-             queue.Enqueue(nodeMap[from]);
+            queue.Enqueue(nodeMap[from]);
 
             while (queue.Count > 0)
             {
                 Node<Point> currentPoint = queue.Dequeue();
                 currentPoint.Visited = true;
 
-                foreach ( var edge in currentPoint.Neighbours)
+                foreach (var edge in currentPoint.Neighbours)
                 {
                     var neighbour = edge.To;
                     if (neighbour.Visited != true)
@@ -135,6 +139,16 @@ namespace BlindApp.Model
             }
 
             return "hovno hovno zlata rybka";
+        }
+
+        private static void InitNodes()
+        {
+            foreach (var node in nodeMap.Values)
+            {
+                node.PreviousNode = null;
+                node.PathPrice = int.MaxValue;
+                node.Visited = false;
+            }
         }
     }
 }

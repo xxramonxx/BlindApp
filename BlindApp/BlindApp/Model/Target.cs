@@ -11,7 +11,7 @@ namespace BlindApp.Model
         [PrimaryKey, AutoIncrement, Column("ID")]
         public int ID { get; set; }
         public string Employee { get; set; }
-        [Ignore]
+//        [Ignore]
         public string EmployeeParsed { get; set; }
         public string Office { get; set; }
         public int Floor { get; set; }
@@ -20,12 +20,12 @@ namespace BlindApp.Model
 
         public string GetNearestEndpoint()
         {
-            PointsTable pointsTable = new PointsTable(Initialize.DatabaseConnect());
+            PointsTable pointsTable = new PointsTable(Initializer.DatabaseConnect());
 
             var endpoint = pointsTable.SelectSingleRow(
                 "select * from Points Where Floor=" + Floor +
                 " AND Minor=" + Minor);
-            return endpoint.ToString();
+            return endpoint != null ? endpoint.ToString() : null;
         }
 
         public int CompareTo(Target that)

@@ -10,7 +10,7 @@ namespace BlindApp.Database
     {
         public static void Execute()
         {
-            PointsTable pointsTable = new PointsTable(Initialize.DatabaseConnect());
+            PointsTable pointsTable = new PointsTable(Initializer.DatabaseConnect());
             var assembly = typeof(PointsTableInitializer).GetTypeInfo().Assembly;
             string[] names = assembly.GetManifestResourceNames();
             Stream stream = assembly.GetManifestResourceStream("BlindApp.Sources.beacons_data.csv");

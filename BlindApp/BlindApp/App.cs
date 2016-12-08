@@ -10,15 +10,21 @@ namespace BlindApp
         public static int ScreenWidth;
         public static int ScreenHeight;
 
+        public static BeaconsHandler BeaconsHandler;
+
         private IBluetoothController Bluetooth;
         private bool initBTstate;
 
         public App()
         {
-            new Database.Initialize();
-            new TextToSpeech();
+            Database.Initializer.Execute();
+
+            TextToSpeech.Init();
+            SpeechRecognition.Init();
 
             Bluetooth = DependencyService.Get<IBluetoothController>();
+
+            BeaconsHandler = new BeaconsHandler();
 
             MainPage = new MainPage();
 
@@ -26,12 +32,16 @@ namespace BlindApp
        
         protected override void OnStart()
         {
-            initBTstate = Bluetooth.IsEnabled();
-            // Handle when your app starts
-            if (!initBTstate)
+            if (Bluetooth.GetAdapter() != null)
             {
-                Bluetooth.Start();
-                TextToSpeech.speakNext("Bluetooth zapnutý");
+                initBTstate = Bluetooth.IsEnabled();
+                // Handle when your app starts
+                if (!initBTstate)
+                {
+                    Bluetooth.Start();
+                    TextToSpeech.speakNext("Bluetooth zapnutý");
+                }
+                BeaconsHandler.Init();
             }
         }
 
@@ -41,7 +51,7 @@ namespace BlindApp
             if (Bluetooth.IsEnabled() && initBTstate == false)
             {
                 Bluetooth.Stop();
-                TextToSpeech.speak("Bluetooth vypnutý");
+                TextToSpeech.Speak("Bluetooth vypnutý");
             }
 
         }
@@ -52,8 +62,9 @@ namespace BlindApp
             if (!Bluetooth.IsEnabled())
             {
                 Bluetooth.Start();
-                TextToSpeech.speak("Bluetooth zapnutý");
+                TextToSpeech.Speak("Bluetooth zapnutý");
             }
+            BeaconsHandler.Init();
         }
     }
 }

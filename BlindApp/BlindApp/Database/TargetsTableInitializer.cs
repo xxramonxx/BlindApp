@@ -9,7 +9,7 @@ namespace BlindApp.Database
     {
         public static void Execute()
         {
-            TargetsTable pointsTable = new TargetsTable(Initialize.DatabaseConnect());
+            TargetsTable pointsTable = new TargetsTable(Initializer.DatabaseConnect());
             var assembly = typeof(TargetsTableInitializer).GetTypeInfo().Assembly;
             string[] names = assembly.GetManifestResourceNames();
             Stream stream = assembly.GetManifestResourceStream("BlindApp.Sources.osoby.csv");

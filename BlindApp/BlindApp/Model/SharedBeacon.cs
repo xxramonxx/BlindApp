@@ -53,7 +53,7 @@ namespace BlindApp
         {
             UID = UID.ToUpper();   // lazy hack
 
-            PointsTable pointsTable = new PointsTable(Initialize.DatabaseConnect());
+            PointsTable pointsTable = new PointsTable(Initializer.DatabaseConnect());
             
             var additionalData = pointsTable.SelectSingleRow(
                 "select * from Points Where UID='" + UID +

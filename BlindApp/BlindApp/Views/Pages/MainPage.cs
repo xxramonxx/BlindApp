@@ -6,16 +6,16 @@ namespace BlindApp.Views.Pages
 {
     public class MainPage : MasterDetailPage
     {
-        public static MasterDetailPage masterDetailPage;
+        public static MasterDetailPage MasterDetailPage;
 
         public MainPage()
         {
-            masterDetailPage = this;
+            MasterDetailPage = this;
             Master = new MenuPage();
             Detail = new NavigationPage(new IntroPage());
         }
 
-        public static void DetailChange(String PageName)
+        public static void DetailChange(string PageName)
         {
             var switchPage = new Page();
             if (PageName == "SpeechSynthetizer")
@@ -31,8 +31,8 @@ namespace BlindApp.Views.Pages
                 switchPage = new SpeechRecognitionPage();
             }
 
-            masterDetailPage.Detail = new NavigationPage(switchPage);
-            masterDetailPage.IsPresented = false;
+            MasterDetailPage.Detail = new NavigationPage(switchPage);
+            MasterDetailPage.IsPresented = false;
         }
     }
 }

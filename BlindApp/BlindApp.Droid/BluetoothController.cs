@@ -11,7 +11,7 @@ namespace BlindApp.Droid
     {
         BluetoothAdapter adapter;
 
-        private BluetoothAdapter getAdapter()
+        public BluetoothAdapter GetAdapter()
         {
             if (adapter == null)
             {
@@ -22,22 +22,22 @@ namespace BlindApp.Droid
 
         public bool IsDiscovering()
         {
-            return getAdapter().IsDiscovering;
+            return GetAdapter().IsDiscovering;
         }
 
         public bool IsEnabled()
         {
-            return getAdapter().IsEnabled;
+            return GetAdapter().IsEnabled;
         }
 
         public void Start()
         {
-            getAdapter().Enable();
+            GetAdapter().Enable();
         }
 
         public void Stop()
         {
-            getAdapter().Disable();
+            GetAdapter().Disable();
         }
     }
 }

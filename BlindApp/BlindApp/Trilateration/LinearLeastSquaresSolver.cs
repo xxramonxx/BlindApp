@@ -51,7 +51,7 @@ namespace BlindApp
                 double ri = function.getDistances()[i];
                 double risquared = ri * ri;
 
-                // find distance between ri and r0
+                // Localize distance between ri and r0
                 double di0squared = 0;
                 for (int j = 0; j < positionDimension; j++) {
                     double dij0j = function.getPositions()[i][j] - function.getPositions()[0][j];

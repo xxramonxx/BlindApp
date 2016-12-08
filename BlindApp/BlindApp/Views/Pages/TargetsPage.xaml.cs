@@ -11,20 +11,23 @@ namespace BlindApp.Views.Pages
 {
     public partial class TargetsPage : ContentPage
     {
-        private ListView ListViewObject;
+        public static ListView ListViewObject;
+        public static int ChoiceFlag;
 
-        public TargetsPage(int ChoiceFlag)
+        public TargetsPage(int Flag)
         {
             Model.Map.Init();
 
             InitializeComponent();
+            SpeechRecognition.SetContext(this);
+
             ListViewObject = this.FindByName<ListView>("ListView");
 
             var cell = new DataTemplate(typeof(TextCell));
             cell.SetValue(TextCell.TextColorProperty, "Black");
             cell.SetValue(TextCell.DetailColorProperty, "Black");
 
-
+            ChoiceFlag = Flag;
             if (ChoiceFlag == 1) {
                 Title = "Vyhľadávanie osoby";
                 cell.SetBinding(TextCell.TextProperty, "Employee");
@@ -37,62 +40,47 @@ namespace BlindApp.Views.Pages
 
             ListViewObject.ItemTemplate = cell;
 
-            TargetsTable TargetsTable = new TargetsTable(Initialize.DatabaseConnect());
-
-            var Targets = TargetsTable.SelectMoreRows("select * from Targets");
-
-            var DataList = new List<Target>();
-            foreach (var Entry in Targets)
-            {
-                DataList.Add(Entry);
-            }
-
+            TargetsTable TargetsTable = new TargetsTable(Initializer.DatabaseConnect());
+            List<Target> Targets;
 
             if (ChoiceFlag == 1)
             {
-                DataList.Sort((x, y) =>
-                {
-                    if (string.Compare(x.Employee, y.Employee, StringComparison.CurrentCulture) < 0) return -1;
-                    if (x.Employee == y.Employee) return 0;
-                    return 1;
-                });
+                Targets = TargetsTable.SelectMoreRows("SELECT *,substr(EmployeeParsed, 1, instr(EmployeeParsed, ' ') - 1) AS first_name, substr(EmployeeParsed, instr(EmployeeParsed, ' ') + 1) AS last_name from Targets ORDER BY last_name");
+                ListViewObject.ItemsSource = Targets;
             }
             else
             {
-                DataList.Sort((x, y) =>
-                {
-                    if (string.Compare(x.Office, y.Office, StringComparison.CurrentCulture) < 0) return -1;
-                    if (x.Office == y.Office) return 0;
-                    return 1;
-                });
-
+                Targets = TargetsTable.SelectMoreRows("SELECT * from Targets ORDER BY Office");
+                // remove duplicity
+                ListViewObject.ItemsSource = Targets.GroupBy(x => x.Office).Select(y => y.First());
             }
-            // remove duplicity
-            ListViewObject.ItemsSource = DataList.GroupBy(x => x.Office).Select(y => y.First()); ;
 
-            ListViewObject.ItemSelected += async (sender, e) =>
+            ListViewObject.ItemSelected += (sender, e) =>
             {
                 var selection = sender as ListView;
-                var entry = selection.SelectedItem as Target;
-
-                var endp = entry.GetNearestEndpoint();
-
-                NavigationHandler.Find("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-38", entry.GetNearestEndpoint());
-                
-                await DisplayAlert("Selected", entry.Employee + " was selected.", "OK");
+                ProcessSelection(selection.SelectedItem as Target);
             };
+        }
+
+        public async void ProcessSelection(Target Target)
+        {
+            var endp =  Target.GetNearestEndpoint();
+
+            TextToSpeech.Speak("Navigujem k cieľu " + Target.Employee + " miestnosť " + Target.Office);
+
+            NavigationHandler.Find("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-38", Target.GetNearestEndpoint());
+
+            await Navigation.PushAsync(new NavigationProcessPage());
         }
 
         private void OnTouchDown(object sender, EventArgs args)
         {
-
-            Debug.WriteLine("Down");
+            SpeechRecognition.Start();
         }
 
         private void OnTouchUp(object sender, EventArgs args)
         {
-            Debug.WriteLine("Up");
-
+            SpeechRecognition.Stop();
         }
     }
 }

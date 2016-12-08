@@ -15,7 +15,7 @@ namespace BlindApp.Droid.Services
 {
     public class AltBeaconService : Java.Lang.Object, IAltBeaconService
     {
-        private const long SCAN_INTERVAL = 500;
+        private const long SCAN_INTERVAL = 800;
 
         private readonly MonitorNotifier _monitorNotifier;
         private readonly RangeNotifier _rangeNotifier;

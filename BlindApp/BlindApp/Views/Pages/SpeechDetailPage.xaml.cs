@@ -7,11 +7,14 @@ namespace BlindApp.Views.Pages
     public partial class SpeechDetailPage : ContentPage
     {
         int counter = 0;
-
+        Button button;
         public SpeechDetailPage()
         {
             Title = "Porozpravajme sa";
             InitializeComponent();
+
+            button = this.FindByName<Button>("Test");
+      //      AccessibilityEffect.SetAccessibilityLabel(button, "Todo item"); // screenreader description
         }
 
         public void OnButtonClicked(object obj, EventArgs e)
@@ -21,20 +24,20 @@ namespace BlindApp.Views.Pages
             counter += 1;
             if (counter == 4)
             {
-                TextToSpeech.speak("Pred vami sa nachádza schodisko, buďte opatrný");
+                TextToSpeech.Speak("Pred vami sa nachádza schodisko, buďte opatrný");
                 counter = 0;
             }
             else if (counter == 3)
             {
-                TextToSpeech.speak("Nerozprávam však veľmi k veci");
+                TextToSpeech.Speak("Nerozprávam však veľmi k veci");
             }
             else if (counter == 2)
             {
-                TextToSpeech.speak("Rada sa rozprávam");
+                TextToSpeech.Speak("Rada sa rozprávam");
             }
             else if (counter == 1)
             {
-                TextToSpeech.speak("Dobrý večer ctený používateľ, kam chcete ísť ?");
+                TextToSpeech.Speak("Dobrý večer ctený používateľ, kam chcete ísť ?");
             }
         }
     }

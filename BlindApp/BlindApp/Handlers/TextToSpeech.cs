@@ -7,13 +7,13 @@ using Xamarin.Forms;
 
 namespace BlindApp
 {
-    public class TextToSpeech
+    public static class TextToSpeech
     {
         static String language;
         static CrossLocale locale;
-        IEnumerable<CrossLocale> locales;
+        static IEnumerable<CrossLocale> locales;
 
-        public TextToSpeech()
+        public static void Init()
         {
 
             language = "sk";
@@ -29,7 +29,7 @@ namespace BlindApp
             }
         }
 
-        public static void speak(String text)
+        public static void Speak(String text)
         {
             CrossTextToSpeech.Current.Speak( text,
             //  pitch: (float)sliderPitch.Value,

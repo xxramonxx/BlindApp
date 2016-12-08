@@ -10,7 +10,7 @@ namespace BlindApp.Views.Pages
     public class BeaconPage : ContentPage
     {
         ListView _list;
-        BeaconViewModel ViewModel;  
+        BeaconsHandler ViewModel;  
 
         SKMatrix _m = SKMatrix.MakeIdentity();
 
@@ -19,7 +19,7 @@ namespace BlindApp.Views.Pages
             BackgroundColor = Color.White;
             Title = "Beacon locator";
 
-            ViewModel = new BeaconViewModel();
+            ViewModel = App.BeaconsHandler;
             ViewModel.ListChanged += (sender, e) =>
             {
                 _list.ItemsSource = ViewModel.VisibleData;
@@ -96,7 +96,6 @@ namespace BlindApp.Views.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            ViewModel.Init();
         }
     }
 }

@@ -7,13 +7,13 @@ using BlindApp.Model;
 
 namespace BlindApp.Database
 {
-	public class Initialize
+	public static class Initializer
 	{
-		SQLiteConnection sqlite;
+		static SQLiteConnection sqlite;
 		static String DatabaseFile = "PrototyperSQLite.db";
 		static int DatabaseVersion = 1;
 
-		public Initialize()
+		public static void Execute()
 		{
 			sqlite = DependencyService.Get<ISQLite>().GetConnection(DatabaseFile);
 
@@ -60,7 +60,7 @@ namespace BlindApp.Database
             UpgradeDatabaseCheck(versionTable.ActualVersion());
 		}
 
-		private void UpgradeDatabaseCheck(int version)
+		private static void UpgradeDatabaseCheck(int version)
 		{
 			switch (version)
 			{

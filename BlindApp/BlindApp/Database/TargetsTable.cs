@@ -49,6 +49,12 @@ namespace BlindApp.Database.Tables
             return result;
         }
 
+        public List<Target> GetTargetsByOffice(string param)
+        {
+            param = param.Replace("bodka", ".").Replace(" ", "");
+            return SelectMoreRows("select * from Targets WHERE replace( Office, '.', '')='" + param + "'");         
+        }
+
         public int GetLastID() { return sqlite.ExecuteScalar<int>("SELECT last_insert_rowid()"); }
     }
 }

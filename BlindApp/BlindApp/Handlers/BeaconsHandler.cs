@@ -6,10 +6,11 @@ using System;
 using System.Linq;
 using System.Text;
 using BlindApp.Model;
+using System.Threading.Tasks;
 
 namespace BlindApp
 {
-    public class BeaconViewModel
+    public class BeaconsHandler
     {
         private readonly int DELETE_INTERVAL_SECONDS = 50;
         private Dictionary<string, SharedBeacon> beaconList;
@@ -17,7 +18,7 @@ namespace BlindApp
         public event EventHandler ListChanged;   
         public List<SharedBeacon> VisibleData { get; set; }
 
-        public BeaconViewModel()
+        public BeaconsHandler()
         {
             VisibleData = new List<SharedBeacon>();
             beaconList = new Dictionary<string, SharedBeacon>();
@@ -57,34 +58,42 @@ namespace BlindApp
 
         private void InitAgingAlgorithm()
         {
-            Device.StartTimer(TimeSpan.FromSeconds(1), () => {
-                // Beacons aging algorithm
-                var time = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
-                foreach (var key in beaconList.Keys.ToList())
+            Task.Run(() =>
+            {
+                Device.StartTimer(TimeSpan.FromSeconds(1), () =>
                 {
-                    if (time - beaconList[key].LastUpdate > DELETE_INTERVAL_SECONDS)
+                    // Beacons aging algorithm
+                    var time = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
+                    foreach (var key in beaconList.Keys.ToList())
                     {
-                        beaconList.Remove(key);
-                        OnListChanged();
+                        if (time - beaconList[key].LastUpdate > DELETE_INTERVAL_SECONDS)
+                        {
+                            beaconList.Remove(key);
+                            OnListChanged();
 
-                        Debug.WriteLine("Deleting beacon with UID: " + key);
+                            Debug.WriteLine("Deleting beacon with UID: " + key);
+                        }
                     }
-                }
-                // Returning true means you want to repeat this timer
-                return true;
+                    // Returning true means you want to repeat this timer
+                    return true;
+                });
             });
         }
 
         private void InitLocationService()
         {
-            Device.StartTimer(TimeSpan.FromSeconds(2), () => {
-                Debug.WriteLine(beaconList.Count);
-                if (beaconList.Count >= 3)
+            Task.Run(() =>
+            {
+                Device.StartTimer(TimeSpan.FromSeconds(2), () =>
                 {
-                    Position.find(beaconList.Values.ToList());
-                }
-                // Returning true means you want to repeat this timer
-                return true;
+                    Debug.WriteLine(beaconList.Count);
+                    if (beaconList.Count >= 3)
+                    {
+                        NavigationHandler.Position.Localize(beaconList.Values.ToList());
+                    }
+                    // Returning true means you want to repeat this timer
+                    return true;
+                });
             });
         }
 

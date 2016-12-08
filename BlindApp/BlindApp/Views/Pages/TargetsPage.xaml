@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:BlindApp="clr-namespace:ScnViewGestures.Plugin.Forms;assembly=ScnViewGestures"
+             xmlns:access="clr-namespace:BlindApp;assembly=BlindApp"
+             xmlns:views="clr-namespace:BlindApp.Views;assembly=BlindApp"
              x:Class="BlindApp.Views.Pages.TargetsPage">
   <StackLayout>
     <Label
@@ -10,32 +11,33 @@
         TextColor="Black"
         VerticalOptions="Center"
         HorizontalOptions="Center" />
-    <ListView           
-        x:Name="ListView"
-        VerticalOptions="FillAndExpand" 
-        HorizontalOptions="FillAndExpand">
-    </ListView>
     <AbsoluteLayout
-    HorizontalOptions="Fill"
-    VerticalOptions="Fill">
-      <BlindApp:ViewGestures 
-        x:Name="Area"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
 
-        BackgroundColor="Blue"
-        AbsoluteLayout.LayoutBounds="0,0, 1, 1"
-        AbsoluteLayout.LayoutFlags="All"
-        TouchBegan="OnTouchDown" 
-        TouchEnded="OnTouchUp" 
-      />         
-    <Label       
-      Text="Stlač a hovor"
-      LineBreakMode="WordWrap"
-      FontSize="20"
-      TextColor="Black"
-      VerticalOptions="FillAndExpand" 
-      HorizontalOptions="Center"
-      AbsoluteLayout.LayoutBounds="0, 0.5, 1.0, .2"
-      AbsoluteLayout.LayoutFlags="All" />  
-  </AbsoluteLayout>
+      <ListView
+          x:Name="ListView"
+          AbsoluteLayout.LayoutBounds="0, 0, 1, .7"
+          AbsoluteLayout.LayoutFlags="All"
+          VerticalOptions="FillAndExpand"
+          HorizontalOptions="FillAndExpand"> 
+      </ListView>
+      <views:CustomButton
+         x:Name ="Speak"
+          access:AccessibilityEffect.AccessibilityLabel="Stlač a hovor"
+          Image="microphone.png"
+          FontSize="25"
+          TextColor="Black"
+          VerticalOptions="FillAndExpand"
+          HorizontalOptions="FillAndExpand"
+          BackgroundColor="#FFB019"
+          Margin="10,0,10,10"
+          AbsoluteLayout.LayoutBounds=".0, 1, 1, .25"
+          AbsoluteLayout.LayoutFlags="All"
+          Pressed="OnTouchDown"
+          Released="OnTouchUp"
+        />
+      <!--access:AccessibilityEffect.AccessibilityLabel="Som touchlabel"-->
+    </AbsoluteLayout>
   </StackLayout>
 </ContentPage>
