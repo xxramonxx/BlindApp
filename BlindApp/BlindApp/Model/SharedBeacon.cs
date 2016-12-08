@@ -3,6 +3,7 @@ using BlindApp.Database;
 using BlindApp.Database.Tables;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 namespace BlindApp
@@ -59,12 +60,13 @@ namespace BlindApp
                 "select * from Points Where UID='" + UID +
                 "' AND Minor=" + Minor + " AND Major=" + this.Major
                 );
+
             if (additionalData != null)
             {
                 ID = additionalData.ID;
-                XCoordinate = Double.Parse(additionalData.XCoordinate);
-                YCoordinate = Double.Parse(additionalData.YCoordinate);
-                ZCoordinate = Double.Parse(additionalData.ZCoordinate);
+                XCoordinate = Double.Parse(additionalData.XCoordinate, CultureInfo.InvariantCulture);
+                YCoordinate = Double.Parse(additionalData.YCoordinate, CultureInfo.InvariantCulture);
+                ZCoordinate = Double.Parse(additionalData.ZCoordinate, CultureInfo.InvariantCulture);
                 Floor = Double.Parse(additionalData.Floor);
             }
         }
