@@ -1,13 +1,16 @@
 ﻿
 using BlindApp.Database;
 using BlindApp.Database.Tables;
+using SQLite.Net.Attributes;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using Xamarin.Forms;
 
 namespace BlindApp
 {
+    [Table("Points")]
     public class SharedBeacon
     {
         // Received data from bluetooth service 
@@ -19,12 +22,19 @@ namespace BlindApp
         public string MAC { get; set; }
         public long LastUpdate { get; set; }
         //Data from database
+        [PrimaryKey, AutoIncrement, Column("ID")]
         public int ID { get; set; }
         public double XCoordinate { get; set; }
         public double YCoordinate { get; set; }
         public double ZCoordinate { get; set; }
-        public double Floor { get; set; }
-//        public Array Properties { get; set; }
+        public Point Location {
+            get
+            {
+                return new Point(XCoordinate, YCoordinate);
+            }
+        }
+        public string Floor { get; set; }
+        //        public Array Properties { get; set; }
         // Extra data //
         public string FormatedDistance
         {
@@ -64,10 +74,10 @@ namespace BlindApp
             if (additionalData != null)
             {
                 ID = additionalData.ID;
-                XCoordinate = Double.Parse(additionalData.XCoordinate, CultureInfo.InvariantCulture);
-                YCoordinate = Double.Parse(additionalData.YCoordinate, CultureInfo.InvariantCulture);
-                ZCoordinate = Double.Parse(additionalData.ZCoordinate, CultureInfo.InvariantCulture);
-                Floor = Double.Parse(additionalData.Floor);
+                XCoordinate = additionalData.XCoordinate;
+                YCoordinate = additionalData.YCoordinate;
+                ZCoordinate = additionalData.ZCoordinate;
+                Floor = additionalData.Floor;
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using BlindApp.Interfaces;
+using BlindApp.Model;
 using BlindApp.Views.Pages;
 using Xamarin.Forms;
 
@@ -28,6 +29,8 @@ namespace BlindApp
 
             MainPage = new MainPage();
 
+
+            Building.Init();
         }
        
         protected override void OnStart()
@@ -47,13 +50,15 @@ namespace BlindApp
 
         protected override void OnSleep()
         {
+            base.OnSleep();
+            NavigationHandler.Position.Compass.Stop();
+
             // Handle when your app sleeps
             if (Bluetooth.IsEnabled() && initBTstate == false)
             {
                 Bluetooth.Stop();
                 TextToSpeech.Speak("Bluetooth vypnutý");
             }
-
         }
 
         protected override void OnResume()

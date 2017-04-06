@@ -18,6 +18,7 @@ namespace BlindApp.Model
         public int Room { get; set; }
         public int Minor { get; set; }
 
+
         public string GetNearestEndpoint()
         {
             PointsTable pointsTable = new PointsTable(Initializer.DatabaseConnect());

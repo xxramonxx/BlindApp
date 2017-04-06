@@ -7,6 +7,9 @@ using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Complex;
 using System.Diagnostics;
+using Plugin.Compass;
+using Xamarin.Forms;
+using BlindApp.Interfaces;
 
 namespace BlindApp.Model
 {
@@ -15,12 +18,51 @@ namespace BlindApp.Model
         public double XCoordinate { get; set; }
         public double YCoordinate { get; set; }
 
+        public Point Location
+        {
+            get
+            {
+                return new Point(XCoordinate, YCoordinate);
+            }
+        }
+        public double Rotation { get; set; }
+
         public string Floor { get; set; }
         public bool goodDirection { get; set; }
 
         public Position LastPosition;
 
-        private long LastDirectionUpdate;
+        public ICompass Compass;
+
+        private DateTime LastDirectionUpdate;
+
+        public Vector change;
+
+
+        public Position() 
+            {
+            LastDirectionUpdate = DateTime.Now;
+
+            Compass = DependencyService.Get<ICompass>();
+
+            Compass.CompassChanged += (s, e) =>
+            {
+                if (LastDirectionUpdate.AddSeconds(1).CompareTo(DateTime.Now) < 0)
+                {
+                    if (this != LastPosition)
+                    {
+                        // get  vector from  last position and compass change
+
+                    }
+
+                    LastDirectionUpdate = DateTime.Now;
+                }
+                var values = e.Values;
+         //       Debug.WriteLine(values);
+            };
+
+            Compass.Start();
+        }
 
         // direction change : substract begin vector as 0 and new trilat vector
 

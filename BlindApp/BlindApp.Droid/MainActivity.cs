@@ -10,6 +10,7 @@ using ScnViewGestures.Plugin.Forms.Droid.Renderers;
 using Android.Content;
 using Android.Views;
 
+
 namespace BlindApp.Droid
 {
     [Activity(

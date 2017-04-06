@@ -1,11 +1,17 @@
-﻿using BlindApp;
+﻿#define DEBUG
+
+using BlindApp;
 using BlindApp.Database;
 using BlindApp.Database.Tables;
 using BlindApp.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+using Xamarin.Forms;
+using System.Collections;
 
 namespace BlindApp.Model
 {
@@ -13,11 +19,11 @@ namespace BlindApp.Model
     {
         public static bool initialized = false;
 
-        private static Dictionary<string, Node<Point>> nodeMap;
+        private static Dictionary<string, Node<SharedBeacon>> nodeMap;
 
         public static async void Init()
         {
-            nodeMap = new Dictionary<string, Node<Point>>();
+            nodeMap = new Dictionary<string, Node<SharedBeacon>>();
 
             // TODO: Iitialize by first captured beacon group number
             await Task.Run(() =>
@@ -39,10 +45,88 @@ namespace BlindApp.Model
 
             foreach (var beacon in beaconList)
             {
-                var node = new Node<Point>();
+                var node = new Node<SharedBeacon>();
                 node.Data = beacon;
                 nodeMap.Add(beacon.ToString(), node);
             }
+        }
+
+        public static string NewFind(Point start, Point target)
+        {
+            var beacons = Building.Beacons;
+
+            StringBuilder sb = new StringBuilder();
+
+            #if DEBUG
+
+            NavigationHandler.Position.XCoordinate = 5000;
+            NavigationHandler.Position.YCoordinate = 1200;
+
+            #endif
+
+            SharedBeacon nearestBeacon = GetCurrnetNearestBeacon(target);
+
+            SharedBeacon targetBeacon = null;
+            List<string> visited = new List<string>();
+            var limit = 0;
+
+            while (targetBeacon == null && limit < 1000)
+            {
+                visited.Add(nearestBeacon.ToString());
+                var currentFitness = EvaluateFitness(start, nearestBeacon.Location, target);
+                var radius = 100;
+                while (radius < 2000)
+                {
+                    var beaconsAround = beacons.Where(item =>
+                        ((item.Location.X > nearestBeacon.Location.X - radius 
+                       && item.Location.X < nearestBeacon.Location.X + radius)
+                       && item.Location.Y > nearestBeacon.Location.Y - radius 
+                       && item.Location.Y < nearestBeacon.Location.Y + radius)
+                       && EvaluateFitness(start, item.Location, target) < currentFitness
+                       && !visited.Contains(item.ToString())).ToList();
+
+                    if (beaconsAround.Count > 0)
+                    {
+                        var testFitness = EvaluateFitness(start, beaconsAround.FirstOrDefault().Location, target);
+                        nearestBeacon = beaconsAround.OrderByDescending(item => EvaluateFitness(start, item.Location, target)).LastOrDefault(); ;
+                        break;
+                    }
+
+                    radius += 100;
+                }
+
+              //  next
+                limit++;
+            }
+
+            return sb.ToString();
+        }
+
+        private static SharedBeacon GetCurrnetNearestBeacon(Point target)
+        {
+            var visibleBeacons = App.BeaconsHandler.VisibleData.Clone<List<SharedBeacon>>().Take(4);
+            var position = NavigationHandler.Position.Location;
+
+            // debug
+       /*     List<double> mins = new List<double>();
+            foreach (var test in visibleBeacons)
+            {
+                mins.Add(GetDistance(test.Location, position));
+            }*/
+
+         //   var a = GetDistance(closestBeacon.Location, position);
+         //   var result = visibleBeacons.First(x => x.Distance == closestBeacon.Distance);
+
+            return visibleBeacons.OrderByDescending(x => EvaluateFitness(position, x.Location, target)).LastOrDefault();
+        }
+
+        private static double EvaluateFitness(Point start, Point current, Point target)
+        {
+            // TODO: vzdialenost k cielu ^2 - vzdialenost odomna
+            var distanceToTarget = current.Distance(target);
+
+
+            return distanceToTarget;
         }
 
         private static void CreateEdges()
@@ -55,9 +139,9 @@ namespace BlindApp.Model
 
                 foreach (var path in pathList)
                 {
-                    var edge = new Edge<Point>();
+                    var edge = new Edge<SharedBeacon>();
                     var pattern = (path.Start != node.Data.ToString() ? path.Start : path.End);
-                    var toNode = new Node<Point>();
+                    var toNode = new Node<SharedBeacon>();
 
                     if (nodeMap.TryGetValue(pattern, out toNode))
                     {
@@ -69,22 +153,22 @@ namespace BlindApp.Model
             }
         }
 
-        public static Node<Point> FindUsingHeap(string from, string to)
+        public static Node<SharedBeacon> FindUsingHeap(string from, string to)
         {
             InitNodes();
             if (initialized != true)
                 throw new Exception("Map not initialized");
 
-            var heap = new Heap<Node<Point>>();
+            var heap = new Heap<Node<SharedBeacon>>();
 
-            var localNodeMap = new Dictionary<string, Node<Point>>(nodeMap);
+            var localNodeMap = new Dictionary<string, Node<SharedBeacon>>(nodeMap);
 
             localNodeMap[from].PathPrice = 0;
             heap.Add(localNodeMap[from]);
 
             while (heap.size > 0)
             {
-                Node<Point> currentPoint = heap.PopMin();
+                Node<SharedBeacon> currentPoint = heap.PopMin();
                 currentPoint.Visited = true;
 
                 if (currentPoint.Data.ToString() == to)
@@ -113,12 +197,12 @@ namespace BlindApp.Model
 
         public static string FindUsingQueue(string from, string to)
         {
-            var queue = new Queue<Node<Point>>();
+            var queue = new Queue<Node<SharedBeacon>>();
             queue.Enqueue(nodeMap[from]);
 
             while (queue.Count > 0)
             {
-                Node<Point> currentPoint = queue.Dequeue();
+                Node<SharedBeacon> currentPoint = queue.Dequeue();
                 currentPoint.Visited = true;
 
                 foreach (var edge in currentPoint.Neighbours)

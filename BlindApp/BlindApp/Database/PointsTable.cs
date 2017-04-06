@@ -8,27 +8,6 @@ using System.Text;
 
 namespace BlindApp.Database.Tables
 {
-	[Table("Points")]
-	public class Point
-    {
-        [PrimaryKey, AutoIncrement, Column("ID")]
-		public int ID { get; set; }
-        public string UID { get; set; }
-        public string Major { get; set; }
-        public string Minor { get; set; }
-        public string XCoordinate { get; set; }
-        public string YCoordinate { get; set; }
-        public string ZCoordinate { get; set; }
-        public string Floor { get; set; }
-
-        public override string ToString()
-        {
-            var SB = new StringBuilder();
-            SB.Append(this.UID).Append("-").Append(this.Major).Append("-").Append(this.Minor);
-            return SB.ToString();
-        }
-    }
-
 	public class PointsTable
     {
 		SQLiteConnection sqlite;
@@ -40,19 +19,19 @@ namespace BlindApp.Database.Tables
 
 		public Boolean TableExistence() { return sqlite.GetTableInfo("Points").Any(); }
 
-		public void CreateTable() { sqlite.CreateTable<Point>(); }
-		public void WipeTable() { sqlite.DeleteAll<Point>(); }
-        public void DropTable() { sqlite.DropTable<Point>(); }
+		public void CreateTable() { sqlite.CreateTable<SharedBeacon>(); }
+		public void WipeTable() { sqlite.DeleteAll<SharedBeacon>(); }
+        public void DropTable() { sqlite.DropTable<SharedBeacon>(); }
 
-        public void Insert(Point project) { sqlite.Insert(project); }
-		public void Update(Point project) { sqlite.Update(project); }
-		public void Execute(String query) { sqlite.Execute(query); } 
-		public void Delete(Point project) { sqlite.Delete(project); }
+        public void Insert(SharedBeacon project) { sqlite.Insert(project); }
+		public void Update(SharedBeacon project) { sqlite.Update(project); }
+		public void Execute(string query) { sqlite.Execute(query); } 
+		public void Delete(SharedBeacon project) { sqlite.Delete(project); }
 
-		public Point SelectSingleRow(String query) { return sqlite.Query<Point>(query).FirstOrDefault();}
-		public List<Point> SelectMoreRows(String query) { return sqlite.Query<Point>(query); }
+		public SharedBeacon SelectSingleRow(String query) { return sqlite.Query<SharedBeacon>(query).FirstOrDefault();}
+		public List<SharedBeacon> SelectMoreRows(String query) { return sqlite.Query<SharedBeacon>(query); }
 
-		public Point GetByID(int ID) { return sqlite.Get<Point>(ID); }
+		public SharedBeacon GetByID(int ID) { return sqlite.Get<SharedBeacon>(ID); }
 
         public int GetLastID() { return sqlite.ExecuteScalar<int>("SELECT last_insert_rowid()"); }
 	}

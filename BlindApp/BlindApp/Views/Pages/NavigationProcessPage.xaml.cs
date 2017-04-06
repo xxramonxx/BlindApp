@@ -29,6 +29,8 @@ namespace BlindApp.Views.Pages
                     xCoordinate.Text = String.Format("{0:#0.000}", NavigationHandler.Position.XCoordinate);
                     yCoordinate.Text = String.Format("{0:#0.000}", NavigationHandler.Position.YCoordinate);
 
+                    rotation.Text = NavigationHandler.Position.Rotation.ToString();
+
                     return true;
                 });
             });

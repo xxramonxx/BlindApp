@@ -26,13 +26,13 @@ namespace BlindApp
 
         public void Init()
         {
-            var beaconService = DependencyService.Get<IAltBeaconService>();
+     /*       var beaconService = DependencyService.Get<IAltBeaconService>();
 
             beaconService.ListChanged += (sender, e) =>
             {
                 foreach ( var beacon in e.Data)
                 {
-                    var pattern = new StringBuilder(beacon.UID + beacon.Major + beacon.Minor).ToString();
+                    var pattern = new StringBuilder(beacon.Major + beacon.Minor).ToString();
                  //   pattern = new StringBuilder(beacon.UID + beaconList.Count).ToString(); // test purposes only
                     if (beaconList.ContainsKey(pattern))
                     {
@@ -40,20 +40,60 @@ namespace BlindApp
                     } else {
                         beacon.LoadAdditionalData();
                         beaconList[pattern] = beacon;
-                    }
-                    
+                    }                  
+                }*/
+
+                #region DEBUG
+
+                SharedBeacon[] beacons = {
+                    new SharedBeacon
+                    {
+                        UID="beacon38",
+                        Major = "3",
+                        Minor = "38",
+                        Distance = 1,
+                        XCoordinate=4572.08,
+                        YCoordinate=717.06
+                    },
+                    new SharedBeacon
+                    {
+                        UID="beacon39",
+                        Major = "3",
+                        Minor = "39",
+                        Distance = 1,
+                        XCoordinate=5570.40,
+                        YCoordinate=722.00
+                    },
+                    new SharedBeacon
+                    {
+                        UID="beacon53",
+                        Major = "3",
+                        Minor = "53",
+                        Distance = 4,
+                        YCoordinate=1611.61,
+                        XCoordinate=5075.84
+                    },
+                };
+
+                foreach (var beacon in beacons)
+                {
+                    var pattern = new StringBuilder(beacon.UID + beacon.Major + beacon.Minor).ToString();
+                   
+                     beaconList[pattern] = beacon;
                 }
+
+                #endregion
 
                 var sortedList = beaconList.OrderBy(b => b.Value.Distance);
                 beaconList = sortedList.ToDictionary(pair => pair.Key, pair => pair.Value);
 
                 OnListChanged();
-            };
+            /*   };*/
 
             InitAgingAlgorithm();
             InitLocationService();
 
-            beaconService.InitializeService();
+     //       beaconService.InitializeService();
         }
 
         private void InitAgingAlgorithm()

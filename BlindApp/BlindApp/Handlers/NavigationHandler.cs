@@ -6,16 +6,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace BlindApp
 {
     public static class NavigationHandler
     {
         public static Position Position = new Position();
-        public static Stack<Point> Path { get; set; }
-        public static Point NextMilestone
+        public static Stack<SharedBeacon> Path { get; set; }
+        public static SharedBeacon NextMilestone
         {
-            get { return Path.Count > 0 ? Path.Peek() : new Point(); }
+            get { return Path.Count > 0 ? Path.Peek() : new SharedBeacon(); }
         }
         public static double RemainingMetersNextMilestone;
         public static long RemainingStepsNextMilestone
@@ -36,17 +37,23 @@ namespace BlindApp
 
         public static void Init()
         {
-            Path = new Stack<Point>();
+            Path = new Stack<SharedBeacon>();
             RemainingMeters = 0;
             DestinationReached = false;
+
+            var test = Building.Targets;
+
+            // var result = Map.NewFind(new Point(5000.0, -1000.0), new Point(9584, -880));
+            var result = Map.NewFind(new Point(5000.0, -1000.0), new Point(2490, -447));
+
         }
 
         public static void Find (string from, string to)
         {
             Init();
             var node = Map.FindUsingHeap(from,to);
-            if (node == null)
-                return;
+
+            if (node == null) return;
 
             RemainingMeters = node.PathPrice;
 
