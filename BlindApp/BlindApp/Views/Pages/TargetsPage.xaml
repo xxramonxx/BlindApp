@@ -1,43 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:access="clr-namespace:BlindApp;assembly=BlindApp"
-             xmlns:views="clr-namespace:BlindApp.Views;assembly=BlindApp"
-             x:Class="BlindApp.Views.Pages.TargetsPage">
+<ContentPage
+  x:Class="BlindApp.Views.Pages.TargetsPage"
+  xmlns="http://xamarin.com/schemas/2014/forms"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:access="clr-namespace:BlindApp;assembly=BlindApp"
+  xmlns:views="clr-namespace:BlindApp.Views;assembly=BlindApp">
   <StackLayout>
     <Label
-        Text="Zoznam položiek"
-        FontSize="20"
-        TextColor="Black"
-        VerticalOptions="Center"
-        HorizontalOptions="Center" />
-    <AbsoluteLayout
-        HorizontalOptions="FillAndExpand"
-        VerticalOptions="FillAndExpand">
+      FontSize="20"
+      HorizontalOptions="Center"
+      Text="Zoznam položiek"
+      TextColor="Black"
+      VerticalOptions="Center" />
+    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
       <ListView
-          x:Name="ListView"
-          AbsoluteLayout.LayoutBounds="0, 0, 1, .7"
-          AbsoluteLayout.LayoutFlags="All"
-          VerticalOptions="FillAndExpand"
-          HorizontalOptions="FillAndExpand"> 
-      </ListView>
+        x:Name="ListView"
+        AbsoluteLayout.LayoutBounds="0, 0, 1, .7"
+        AbsoluteLayout.LayoutFlags="All"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand" />
       <views:CustomButton
-         x:Name ="Speak"
-          access:AccessibilityEffect.AccessibilityLabel="Stlač a hovor"
-          Image="microphone.png"
-          FontSize="25"
-          TextColor="Black"
-          VerticalOptions="FillAndExpand"
-          HorizontalOptions="FillAndExpand"
-          BackgroundColor="#FFB019"
-          Margin="10,0,10,10"
-          AbsoluteLayout.LayoutBounds=".0, 1, 1, .25"
-          AbsoluteLayout.LayoutFlags="All"
-          Pressed="OnTouchDown"
-          Released="OnTouchUp"
-        />
-      <!--access:AccessibilityEffect.AccessibilityLabel="Som touchlabel"-->
+        x:Name="Speak"
+        Margin="10,0,10,10"
+        access:AccessibilityEffect.AccessibilityLabel="Stlač a hovor"
+        AbsoluteLayout.LayoutBounds=".0, 1, 1, .25"
+        AbsoluteLayout.LayoutFlags="All"
+        BackgroundColor="#FFB019"
+        FontSize="25"
+        HorizontalOptions="FillAndExpand"
+        Image="microphone.png"
+        Pressed="OnTouchDown"
+        Released="OnTouchUp"
+        TextColor="Black"
+        VerticalOptions="FillAndExpand" />
+      <!--  access:AccessibilityEffect.AccessibilityLabel="Som touchlabel"  -->
     </AbsoluteLayout>
   </StackLayout>
 </ContentPage>

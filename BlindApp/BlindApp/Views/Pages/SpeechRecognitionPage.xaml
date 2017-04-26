@@ -1,34 +1,40 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:BlindApp="clr-namespace:ScnViewGestures.Plugin.Forms;assembly=ScnViewGestures"
-             x:Class="BlindApp.Views.Pages.SpeechRecognitionPage"
-             >
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+  x:Class="BlindApp.Views.Pages.SpeechRecognitionPage"
+  xmlns="http://xamarin.com/schemas/2014/forms"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:BlindApp="clr-namespace:ScnViewGestures.Plugin.Forms;assembly=ScnViewGestures">
   <ContentPage.Content>
     <AbsoluteLayout>
-            <Label x:Name="Label1" Text="I'm centered"
-                AbsoluteLayout.LayoutBounds=".5,.5"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                LineBreakMode="WordWrap"  />
-            <Label Text="I'm bottom center on every device."
-                  AbsoluteLayout.LayoutBounds=".5, 1.0"
-                  AbsoluteLayout.LayoutFlags="PositionProportional"
-              />
-            <BoxView Color="Red"  AbsoluteLayout.LayoutBounds="1,.5, 25, 100"
-                AbsoluteLayout.LayoutFlags="PositionProportional" />
-            <BoxView Color="Red" AbsoluteLayout.LayoutBounds="0,.5,25,100"
-                AbsoluteLayout.LayoutFlags="PositionProportional" />
-            <BoxView Color="Blue" AbsoluteLayout.LayoutBounds=".5,0,100,25"
-                AbsoluteLayout.LayoutFlags="PositionProportional" />
+      <Label
+        x:Name="Label1"
+        AbsoluteLayout.LayoutBounds=".5,.5"
+        AbsoluteLayout.LayoutFlags="PositionProportional"
+        LineBreakMode="WordWrap"
+        Text="I'm centered" />
+      <Label
+        AbsoluteLayout.LayoutBounds=".5, 1.0"
+        AbsoluteLayout.LayoutFlags="PositionProportional"
+        Text="I'm bottom center on every device." />
+      <BoxView
+        AbsoluteLayout.LayoutBounds="1,.5, 25, 100"
+        AbsoluteLayout.LayoutFlags="PositionProportional"
+        Color="Red" />
+      <BoxView
+        AbsoluteLayout.LayoutBounds="0,.5,25,100"
+        AbsoluteLayout.LayoutFlags="PositionProportional"
+        Color="Red" />
+      <BoxView
+        AbsoluteLayout.LayoutBounds=".5,0,100,25"
+        AbsoluteLayout.LayoutFlags="PositionProportional"
+        Color="Blue" />
 
-      <BlindApp:ViewGestures 
-            x:Name="Area"
-            AbsoluteLayout.LayoutBounds="0,0, 1, 1"
-            AbsoluteLayout.LayoutFlags="All"
-            TouchBegan="OnTouchDown" 
-            TouchEnded="OnTouchUp" 
-          >
-      </BlindApp:ViewGestures>
+      <BlindApp:ViewGestures
+        x:Name="Area"
+        AbsoluteLayout.LayoutBounds="0,0, 1, 1"
+        AbsoluteLayout.LayoutFlags="All"
+        TouchBegan="OnTouchDown"
+        TouchEnded="OnTouchUp" />
     </AbsoluteLayout>
   </ContentPage.Content>
 </ContentPage>

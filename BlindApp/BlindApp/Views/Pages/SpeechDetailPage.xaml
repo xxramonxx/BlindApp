@@ -1,14 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:BlindApp="clr-namespace:BlindApp;assembly=ScnViewGestures"
-             x:Class="BlindApp.Views.Pages.SpeechDetailPage">
-    <StackLayout>
-          <Label x:Name="fgaafg" Text="Isiel raz jeden pan a stratil sa" VerticalOptions="Center" HorizontalOptions="Center" />
-      
-          <Label x:Name="fgfg" Text="dodnes sa nenasiel" VerticalOptions="End" HorizontalOptions="Center" />
+<ContentPage
+  x:Class="BlindApp.Views.Pages.SpeechDetailPage"
+  xmlns="http://xamarin.com/schemas/2014/forms"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:BlindApp="clr-namespace:BlindApp;assembly=ScnViewGestures">
+  <StackLayout>
+    <Label
+      x:Name="fgaafg"
+      HorizontalOptions="Center"
+      Text="Isiel raz jeden pan a stratil sa"
+      VerticalOptions="Center" />
 
-          <Button x:Name="Test" Text="Klikni a ja ti nieco poviem" Clicked="OnButtonClicked" />
+    <Label
+      x:Name="fgfg"
+      HorizontalOptions="Center"
+      Text="dodnes sa nenasiel"
+      VerticalOptions="End" />
 
-    </StackLayout>
+    <Button
+      x:Name="Test"
+      Clicked="OnButtonClicked"
+      Text="Klikni a ja ti nieco poviem" />
+
+  </StackLayout>
 </ContentPage>

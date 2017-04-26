@@ -1,0 +1,13 @@
+#!/bin/bash
+path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+files=`find $path -name "*.xaml"`
+count=0
+
+for file in $files; do
+	if mono /Applications/XamlStyler/xstyler.exe -f $file    
+	then
+         ((count=count+1))
+	fi
+done
+
+echo "**Formated $count files**"

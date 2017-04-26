@@ -1,62 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:access="clr-namespace:BlindApp;assembly=BlindApp"
-             xmlns:views="clr-namespace:BlindApp.Views;assembly=BlindApp"
-             x:Class="BlindApp.Views.Pages.IntroPage">
+<ContentPage
+  x:Class="BlindApp.Views.Pages.IntroPage"
+  xmlns="http://xamarin.com/schemas/2014/forms"
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:access="clr-namespace:BlindApp;assembly=BlindApp"
+  xmlns:views="clr-namespace:BlindApp.Views;assembly=BlindApp">
   <StackLayout>
-    <Label 
-        x:Name="title"
-        Text="Čo hľadáte ?"
-        FontSize="25"
-        TextColor="Black"
-        VerticalOptions="Center" 
-        HorizontalOptions="Center" /> 
-    <AbsoluteLayout
-        HorizontalOptions="FillAndExpand"
-        VerticalOptions="FillAndExpand">
-        <views:CustomButton       
-          x:Name="Person"
-          Text="Osobu"
-          Pressed="PageDetailChange"
-          BorderColor="Blue"
-          BorderRadius="5"
-          BorderWidth="20"
-          BackgroundColor="#428ff4" 
-          FontSize="25"
-          TextColor="Black"
-          Margin="10,0,10,0"
-          AbsoluteLayout.LayoutBounds="0, 0, 1, .35"
-          AbsoluteLayout.LayoutFlags="All" />
-        <views:CustomButton 
-          Text="Miestnosť"
-          x:Name="Room"
-          Pressed="PageDetailChange"
-          BackgroundColor="#428ff4"
-          BorderColor="Blue"
-          BorderRadius="5"
-          BorderWidth="20"
-          TextColor="Black"
-          FontSize="25"
-          Margin="10,0,10,0"
-          AbsoluteLayout.LayoutBounds="0, .55, 1, .35"
-          AbsoluteLayout.LayoutFlags="All" />
+    <Label
+      x:Name="title"
+      FontSize="25"
+      HorizontalOptions="Center"
+      Text="Čo hľadáte ?"
+      TextColor="Black"
+      VerticalOptions="Center" />
+    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
       <views:CustomButton
-         x:Name ="Speak"
-          access:AccessibilityEffect.AccessibilityLabel="Stlač a hovor"
-          Image="microphone.png"
-          FontSize="25"
-          TextColor="Black"      
-          VerticalOptions="FillAndExpand"
-          HorizontalOptions="FillAndExpand"
-          BackgroundColor="#FFB019"
-          Margin="10,0,10,10"
-          AbsoluteLayout.LayoutBounds=".0, 1, 1, .25"
-          AbsoluteLayout.LayoutFlags="All"
-          Pressed="OnTouchDown"
-          Released="OnTouchUp"
-        />
-      <!--access:AccessibilityEffect.AccessibilityLabel="Som touchlabel"-->
-      </AbsoluteLayout>
+        x:Name="Person"
+        Margin="10,0,10,0"
+        AbsoluteLayout.LayoutBounds="0, 0, 1, .35"
+        AbsoluteLayout.LayoutFlags="All"
+        BackgroundColor="#428ff4"
+        BorderColor="Blue"
+        BorderRadius="5"
+        BorderWidth="20"
+        FontSize="25"
+        Pressed="PageDetailChange"
+        Text="Osobu"
+        TextColor="Black" />
+      <views:CustomButton
+        x:Name="Room"
+        Margin="10,0,10,0"
+        AbsoluteLayout.LayoutBounds="0, .55, 1, .35"
+        AbsoluteLayout.LayoutFlags="All"
+        BackgroundColor="#428ff4"
+        BorderColor="Blue"
+        BorderRadius="5"
+        BorderWidth="20"
+        FontSize="25"
+        Pressed="PageDetailChange"
+        Text="Miestnosť"
+        TextColor="Black" />
+      <views:CustomButton
+        x:Name="Speak"
+        Margin="10,0,10,10"
+        access:AccessibilityEffect.AccessibilityLabel="Stlač a hovor"
+        AbsoluteLayout.LayoutBounds=".0, 1, 1, .25"
+        AbsoluteLayout.LayoutFlags="All"
+        BackgroundColor="#FFB019"
+        FontSize="25"
+        HorizontalOptions="FillAndExpand"
+        Image="microphone.png"
+        Pressed="OnTouchDown"
+        Released="OnTouchUp"
+        TextColor="Black"
+        VerticalOptions="FillAndExpand" />
+      <!--  access:AccessibilityEffect.AccessibilityLabel="Som touchlabel"  -->
+    </AbsoluteLayout>
   </StackLayout>
 </ContentPage>

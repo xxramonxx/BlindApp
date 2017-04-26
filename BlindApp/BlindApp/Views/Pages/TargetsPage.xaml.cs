@@ -16,7 +16,8 @@ namespace BlindApp.Views.Pages
 
         public TargetsPage(int Flag)
         {
-            Model.Map.Init();
+            Map.Init();
+            // Building.Init();
 
             InitializeComponent();
             SpeechRecognition.SetContext(this);
@@ -45,12 +46,13 @@ namespace BlindApp.Views.Pages
 
             if (ChoiceFlag == 1)
             {
-                Targets = TargetsTable.SelectMoreRows("SELECT *,substr(EmployeeParsed, 1, instr(EmployeeParsed, ' ') - 1) AS first_name, substr(EmployeeParsed, instr(EmployeeParsed, ' ') + 1) AS last_name from Targets ORDER BY last_name");
+                // Targets = TargetsTable.SelectMoreRows("SELECT *,substr(EmployeeParsed, 1, instr(EmployeeParsed, ' ') - 1) AS first_name, substr(EmployeeParsed, instr(EmployeeParsed, ' ') + 1) AS last_name from Targets ORDER BY last_name");
+                Targets = Building.Targets.OrderBy(x => x.EmployeeParsed.Split(' ').Last()).ToList();
                 ListViewObject.ItemsSource = Targets;
             }
             else
             {
-                Targets = TargetsTable.SelectMoreRows("SELECT * from Targets ORDER BY Office");
+                Targets = Building.Targets.OrderBy(x => x.Office).ToList();
                 // remove duplicity
                 ListViewObject.ItemsSource = Targets.GroupBy(x => x.Office).Select(y => y.First());
             }
@@ -68,7 +70,7 @@ namespace BlindApp.Views.Pages
 
             TextToSpeech.Speak("Navigujem k cieľu " + Target.Employee + " miestnosť " + Target.Office);
 
-            NavigationHandler.Find("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-38", Target.GetNearestEndpoint());
+            NavigationHandler.Find(Target);
 
             await Navigation.PushAsync(new NavigationProcessPage());
         }

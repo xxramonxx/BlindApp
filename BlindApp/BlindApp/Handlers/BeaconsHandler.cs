@@ -53,7 +53,7 @@ namespace BlindApp
                         Minor = "38",
                         Distance = 1,
                         XCoordinate=4572.08,
-                        YCoordinate=717.06
+                        YCoordinate=-717.06
                     },
                     new SharedBeacon
                     {
@@ -62,7 +62,7 @@ namespace BlindApp
                         Minor = "39",
                         Distance = 1,
                         XCoordinate=5570.40,
-                        YCoordinate=722.00
+                        YCoordinate=-722.00
                     },
                     new SharedBeacon
                     {
@@ -70,7 +70,7 @@ namespace BlindApp
                         Major = "3",
                         Minor = "53",
                         Distance = 4,
-                        YCoordinate=1611.61,
+                        YCoordinate=-1611.61,
                         XCoordinate=5075.84
                     },
                 };

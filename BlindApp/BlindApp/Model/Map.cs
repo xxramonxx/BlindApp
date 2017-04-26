@@ -51,23 +51,18 @@ namespace BlindApp.Model
             }
         }
 
-        public static string NewFind(Point start, Point target)
+        public static Queue<SharedBeacon> NewFind(Point start, Point target)
         {
+            var path = new Queue<SharedBeacon>();
+
             var beacons = Building.Beacons;
 
-            StringBuilder sb = new StringBuilder();
-
-            #if DEBUG
-
-            NavigationHandler.Position.XCoordinate = 5000;
-            NavigationHandler.Position.YCoordinate = 1200;
-
-            #endif
-
             SharedBeacon nearestBeacon = GetCurrnetNearestBeacon(target);
+            path.Enqueue(nearestBeacon);
 
             SharedBeacon targetBeacon = null;
             List<string> visited = new List<string>();
+
             var limit = 0;
 
             while (targetBeacon == null && limit < 1000)
@@ -87,8 +82,8 @@ namespace BlindApp.Model
 
                     if (beaconsAround.Count > 0)
                     {
-                        var testFitness = EvaluateFitness(start, beaconsAround.FirstOrDefault().Location, target);
                         nearestBeacon = beaconsAround.OrderByDescending(item => EvaluateFitness(start, item.Location, target)).LastOrDefault(); ;
+                        path.Enqueue(nearestBeacon);
                         break;
                     }
 
@@ -98,8 +93,7 @@ namespace BlindApp.Model
               //  next
                 limit++;
             }
-
-            return sb.ToString();
+            return path;
         }
 
         private static SharedBeacon GetCurrnetNearestBeacon(Point target)

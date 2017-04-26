@@ -2,6 +2,7 @@
 using BlindApp.Database.Tables;
 using SQLite.Net.Attributes;
 using System;
+using Xamarin.Forms;
 
 namespace BlindApp.Model
 {
@@ -17,6 +18,17 @@ namespace BlindApp.Model
         public int Floor { get; set; }
         public int Room { get; set; }
         public int Minor { get; set; }
+
+        public double XCoordinate { get; set; }
+        public double YCoordinate { get; set; }
+
+        public Point Location
+        {
+            get
+            {
+                return new Point(XCoordinate, YCoordinate);
+            }
+        }
 
 
         public string GetNearestEndpoint()

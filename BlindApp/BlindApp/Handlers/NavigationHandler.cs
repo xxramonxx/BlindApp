@@ -13,7 +13,7 @@ namespace BlindApp
     public static class NavigationHandler
     {
         public static Position Position = new Position();
-        public static Stack<SharedBeacon> Path { get; set; }
+        public static Queue<SharedBeacon> Path { get; set; }
         public static SharedBeacon NextMilestone
         {
             get { return Path.Count > 0 ? Path.Peek() : new SharedBeacon(); }
@@ -28,42 +28,45 @@ namespace BlindApp
         {
             get { return Convert.ToInt32(RemainingMeters / STEP_METERS); }
         }
-        public static float RemainingMeters;
+        public static double RemainingMeters;
 
         public static bool DestinationReached;
 
-        private const float STEP_METERS = 1.5f;
+        private const double STEP_METERS = 1.5f;
 
 
         public static void Init()
         {
-            Path = new Stack<SharedBeacon>();
             RemainingMeters = 0;
             DestinationReached = false;
 
-            var test = Building.Targets;
-
             // var result = Map.NewFind(new Point(5000.0, -1000.0), new Point(9584, -880));
-            var result = Map.NewFind(new Point(5000.0, -1000.0), new Point(2490, -447));
-
         }
 
-        public static void Find (string from, string to)
+        public static void Find (Target target)
         {
             Init();
-            var node = Map.FindUsingHeap(from,to);
 
-            if (node == null) return;
+#if DEBUG
 
-            RemainingMeters = node.PathPrice;
+            Position.XCoordinate = 4800;
+            Position.YCoordinate = -1000;
 
-            // skip najblizsi ? neviem ci chcem aj aktualne najblizsi beacon
+#endif
 
-            while (node.Data.ToString() != from ) // node != null // ak chcem aj pociatocny
-            { 
-                Path.Push(node.Data);
-                node = node.PreviousNode;
-            }
+            var path = Map.NewFind(Position.Location, target.Location);
+
+            // HACK target ako beacon
+            path.Enqueue(new SharedBeacon{
+                XCoordinate = target.Location.X,
+                YCoordinate = target.Location.Y
+            });
+
+            if (path.Count == 0) return;
+
+            RemainingMeters = GetPathDistance(path);
+
+            Path = path.Clone();
 
             StartNavigation();
             Debug.WriteLine(Path.Peek().UID);
@@ -81,6 +84,24 @@ namespace BlindApp
                     return !DestinationReached;
                 });
             });
+        }
+
+        private static double GetPathDistance(Queue<SharedBeacon> path)
+        {
+            double distance = 0;
+
+            Point current;
+            var next = path.Dequeue().Location;
+            distance += Position.Location.Distance(next);
+
+            current = next;
+            while(path.Count > 0)
+            {
+                distance += path.Peek().Location.Distance(current);
+                current = path.Dequeue().Location;
+            }
+
+            return distance / 100;
         }
     }
 }

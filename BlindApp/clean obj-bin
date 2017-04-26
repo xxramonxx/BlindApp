@@ -1,0 +1,12 @@
+#!/bin/bash
+path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+files=`find $path -name "bin" -d 2 -o -name "obj" -d 2`
+count=0
+for file in $files; do
+	if rm -r $file    
+	then
+         ((count=count+1))
+	fi
+done
+
+echo "**Deleted $count files**"

@@ -33,7 +33,7 @@ namespace BlindApp.Database
                     new Tables.Path {
                         Start = attributes[0],
                         End = attributes[1],
-                        Distance = Float.ParseFloat(attributes[2]), 
+     //                   Distance = Float.ParseFloat(attributes[2]), 
                     }
                 );
             }
