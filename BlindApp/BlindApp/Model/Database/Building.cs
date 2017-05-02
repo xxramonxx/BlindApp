@@ -26,9 +26,10 @@ namespace BlindApp.Model
             Task.Run(() => {
 	            var assembly = typeof(Building).GetTypeInfo().Assembly;
 
-	            var uri = "BlindApp.Sources.fiit.fiit_3.svg";
+             //   var uri = "BlindApp.Sources.fiit.fiit_3.svg";
+                var uri = "BlindApp.Sources.fiit.debug.svg";
 
-	            Stream stream = assembly.GetManifestResourceStream(uri);
+                Stream stream = assembly.GetManifestResourceStream(uri);
 	      
                 XDocument doc = XDocument.Load(stream);
 

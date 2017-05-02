@@ -6,7 +6,9 @@ using System;
 using System.Linq;
 using System.Text;
 using BlindApp.Model;
+using System.Threading;
 using System.Threading.Tasks;
+using BlindApp.Interfaces;
 
 namespace BlindApp
 {
@@ -26,25 +28,8 @@ namespace BlindApp
 
         public void Init()
         {
-     /*       var beaconService = DependencyService.Get<IAltBeaconService>();
-
-            beaconService.ListChanged += (sender, e) =>
+            if (App.DEBUG)
             {
-                foreach ( var beacon in e.Data)
-                {
-                    var pattern = new StringBuilder(beacon.Major + beacon.Minor).ToString();
-                 //   pattern = new StringBuilder(beacon.UID + beaconList.Count).ToString(); // test purposes only
-                    if (beaconList.ContainsKey(pattern))
-                    {
-                        beaconList[pattern].UpdateData(beacon);
-                    } else {
-                        beacon.LoadAdditionalData();
-                        beaconList[pattern] = beacon;
-                    }                  
-                }*/
-
-                #region DEBUG
-
                 SharedBeacon[] beacons = {
                     new SharedBeacon
                     {
@@ -74,31 +59,55 @@ namespace BlindApp
                         XCoordinate=5075.84
                     },
                 };
-
                 foreach (var beacon in beacons)
                 {
                     var pattern = new StringBuilder(beacon.UID + beacon.Major + beacon.Minor).ToString();
-                   
-                     beaconList[pattern] = beacon;
+
+                    beaconList[pattern] = beacon;
                 }
-
-                #endregion
-
                 var sortedList = beaconList.OrderBy(b => b.Value.Distance);
                 beaconList = sortedList.ToDictionary(pair => pair.Key, pair => pair.Value);
 
                 OnListChanged();
-            /*   };*/
+            }
+            else
+            {
+               var beaconService = DependencyService.Get<IAltBeaconService>();
 
-            InitAgingAlgorithm();
-            InitLocationService();
+                beaconService.ListChanged += (sender, e) =>
+                {
+                    foreach (var beacon in e.Data)
+                    {
+                        var pattern = new StringBuilder(beacon.Major + beacon.Minor).ToString();
+                         //   pattern = new StringBuilder(beacon.UID + beaconList.Count).ToString(); // test purposes only
+                         if (beaconList.ContainsKey(pattern))
+                        {
+                            beaconList[pattern].UpdateData(beacon);
+                        }
+                        else
+                        {
+                            beacon.LoadAdditionalData();
 
-     //       beaconService.InitializeService();
+                            if (beacon.Initilized == true)
+                                beaconList[pattern] = beacon;
+                        }
+                    }
+	                var sortedList = beaconList.OrderBy(b => b.Value.Distance);
+	                beaconList = sortedList.ToDictionary(pair => pair.Key, pair => pair.Value);
+
+	                OnListChanged();
+               };
+
+               // InitAgingAlgorithm();
+                InitLocationService();
+
+                beaconService.InitializeService();
+            }           
         }
 
         private void InitAgingAlgorithm()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 Device.StartTimer(TimeSpan.FromSeconds(1), () =>
                 {
@@ -122,21 +131,22 @@ namespace BlindApp
 
         private void InitLocationService()
         {
-            Task.Run(() =>
-            {
-                Device.StartTimer(TimeSpan.FromSeconds(2), () =>
+            
+                DependencyService.Get<ICustomThread>().Thread += delegate
                 {
-                    Debug.WriteLine(beaconList.Count);
-                    if (beaconList.Count >= 3)
+                    Device.StartTimer(TimeSpan.FromSeconds(1), delegate
                     {
-                        NavigationHandler.Position.Localize(beaconList.Values.ToList());
-                    }
-                    // Returning true means you want to repeat this timer
-                    return true;
-                });
-            });
-        }
+                        System.Diagnostics.Debug.WriteLine("Madafada");
+                        //NavigationHandler.Instance.Position.NewLocalize(beaconList.Values.ToList());
 
+                        if (beaconList.Count >= 3)
+                        {
+                            NavigationHandler.Instance.Position.NewLocalize(beaconList.Values.ToList());
+                        }
+                        return true;
+                    });
+                };
+        }
       
 
         private void OnListChanged()

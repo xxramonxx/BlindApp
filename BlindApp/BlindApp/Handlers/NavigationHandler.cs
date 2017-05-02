@@ -1,4 +1,4 @@
-﻿using BlindApp.Database.Tables;
+﻿﻿using BlindApp.Database.Tables;
 using BlindApp.Model;
 using System;
 using System.Collections.Generic;
@@ -7,86 +7,103 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using PropertyChanged;
 
 namespace BlindApp
 {
-    public static class NavigationHandler
+    [ImplementPropertyChanged]
+    public  class NavigationHandler
     {
-        public static Position Position = new Position();
-        public static Queue<SharedBeacon> Path { get; set; }
-        public static SharedBeacon NextMilestone
+        public static NavigationHandler Instance
         {
-            get { return Path.Count > 0 ? Path.Peek() : new SharedBeacon(); }
+            get
+            {
+                if ( _instance == null){
+                    _instance = new NavigationHandler();
+                }
+                return _instance;
+            }
         }
-        public static double RemainingMetersNextMilestone;
-        public static long RemainingStepsNextMilestone
+        private static NavigationHandler _instance;
+       
+        public Position Position { get; set; }
+        public  Queue<MapPoint> Path { get; set; }
+
+        public  MapPoint NextMilestone
+        {
+            get { return Path.Count > 0 ? Path.Peek() : new MapPoint(); }
+        }
+        public  double RemainingMetersNextMilestone;
+        public  long RemainingStepsNextMilestone
         {
             get { return Convert.ToInt32(RemainingMetersNextMilestone / STEP_METERS); }
         }
 
-        public static long RemainingSteps
+        public  long RemainingSteps
         {
             get { return Convert.ToInt32(RemainingMeters / STEP_METERS); }
         }
-        public static double RemainingMeters;
+        public  double RemainingMeters;
 
-        public static bool DestinationReached;
+        public  bool DestinationReached;
 
         private const double STEP_METERS = 1.5f;
 
 
-        public static void Init()
+        public NavigationHandler()
+        {
+            RemainingMeters = 0;
+            DestinationReached = false;
+            Position = new Position();
+        }
+
+        public  async void Find (Target target)
         {
             RemainingMeters = 0;
             DestinationReached = false;
 
-            // var result = Map.NewFind(new Point(5000.0, -1000.0), new Point(9584, -880));
-        }
+            if(App.DEBUG)
+            {
 
-        public static void Find (Target target)
-        {
-            Init();
-
-#if DEBUG
-
-            Position.XCoordinate = 4800;
-            Position.YCoordinate = -1000;
-
-#endif
+                Position.XCoordinate = 4800;
+                Position.YCoordinate = -1000;
+            }
 
             var path = Map.NewFind(Position.Location, target.Location);
 
             // HACK target ako beacon
-            path.Enqueue(new SharedBeacon{
+            path.Enqueue(new MapPoint
+            {
                 XCoordinate = target.Location.X,
                 YCoordinate = target.Location.Y
             });
 
             if (path.Count == 0) return;
 
+            Path = path.Clone();
             RemainingMeters = GetPathDistance(path);
 
-            Path = path.Clone();
-
-            StartNavigation();
-            Debug.WriteLine(Path.Peek().UID);
+          //  StartNavigation();
+        //    Debug.WriteLine(Path.Peek().Location.ToString());
         }
 
-        private static void StartNavigation()
+        private async Task<bool> StartNavigation()
         {
-            Task.Run(() =>
-            {
-                Xamarin.Forms.Device.StartTimer(TimeSpan.FromSeconds(0.5), () =>
-                {
+        //    await Task.Run( () => Do() );
+    //        Task.Run( () =>
+    //        {
+				//Device.StartTimer(TimeSpan.FromSeconds(0.5), Do());
+            //}).ConfigureAwait(false);
 
-
-                    
-                    return !DestinationReached;
-                });
-            });
+            return true;
         }
 
-        private static double GetPathDistance(Queue<SharedBeacon> path)
+        private Func<bool> Do()
+        {
+            return () => true;
+        }
+
+        private  double GetPathDistance(Queue<MapPoint> path)
         {
             double distance = 0;
 

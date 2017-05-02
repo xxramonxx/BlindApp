@@ -1,4 +1,4 @@
-﻿#define DEBUG
+﻿﻿#define DEBUG
 
 using BlindApp;
 using BlindApp.Database;
@@ -25,17 +25,7 @@ namespace BlindApp.Model
         {
             nodeMap = new Dictionary<string, Node<SharedBeacon>>();
 
-            // TODO: Iitialize by first captured beacon group number
-            await Task.Run(() =>
-            {
-
-                CreateNodes();
-                CreateEdges();
-                // do lot of work here
-                initialized = true;
-            });
-            //        Find("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-42", "DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-38"); 
-            //  FindUsingHeap("DEADBEEF-CA1F-BABE-FEED-FEEDC0DEFACE-0-13", "B9407F30-F5F8-466E-AFF9-25556B57FE6D-36295-11950");
+            //// TODO: Iitialize by first captured beacon group number
         }
 
         private static void CreateNodes()
@@ -51,9 +41,9 @@ namespace BlindApp.Model
             }
         }
 
-        public static Queue<SharedBeacon> NewFind(Point start, Point target)
+        public static Queue<MapPoint> NewFind(Point start, Point target)
         {
-            var path = new Queue<SharedBeacon>();
+            var path = new Queue<MapPoint>();
 
             var beacons = Building.Beacons;
 
@@ -99,17 +89,7 @@ namespace BlindApp.Model
         private static SharedBeacon GetCurrnetNearestBeacon(Point target)
         {
             var visibleBeacons = App.BeaconsHandler.VisibleData.Clone<List<SharedBeacon>>().Take(4);
-            var position = NavigationHandler.Position.Location;
-
-            // debug
-       /*     List<double> mins = new List<double>();
-            foreach (var test in visibleBeacons)
-            {
-                mins.Add(GetDistance(test.Location, position));
-            }*/
-
-         //   var a = GetDistance(closestBeacon.Location, position);
-         //   var result = visibleBeacons.First(x => x.Distance == closestBeacon.Distance);
+            var position = NavigationHandler.Instance.Position.Location;
 
             return visibleBeacons.OrderByDescending(x => EvaluateFitness(position, x.Location, target)).LastOrDefault();
         }

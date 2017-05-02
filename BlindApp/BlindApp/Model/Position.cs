@@ -10,14 +10,19 @@ using System.Diagnostics;
 using Plugin.Compass;
 using Xamarin.Forms;
 using BlindApp.Interfaces;
+using PropertyChanged;
+
+using System.Numerics;
+using MathNet.Numerics;
+ 
 
 namespace BlindApp.Model
 {
+    [ImplementPropertyChanged]
     public class Position
     {
         public double XCoordinate { get; set; }
         public double YCoordinate { get; set; }
-
         public Point Location
         {
             get
@@ -32,36 +37,14 @@ namespace BlindApp.Model
 
         public Position LastPosition;
 
-        public ICompass Compass;
-
         private DateTime LastDirectionUpdate;
 
-        public Vector change;
+        public Vector2 change;
 
 
         public Position() 
-            {
-            LastDirectionUpdate = DateTime.Now;
-
-            Compass = DependencyService.Get<ICompass>();
-
-            Compass.CompassChanged += (s, e) =>
-            {
-                if (LastDirectionUpdate.AddSeconds(1).CompareTo(DateTime.Now) < 0)
-                {
-                    if (this != LastPosition)
-                    {
-                        // get  vector from  last position and compass change
-
-                    }
-
-                    LastDirectionUpdate = DateTime.Now;
-                }
-                var values = e.Values;
-         //       Debug.WriteLine(values);
-            };
-
-            Compass.Start();
+        {
+            LastDirectionUpdate = DateTime.Now;    
         }
 
         // direction change : substract begin vector as 0 and new trilat vector
@@ -70,71 +53,6 @@ namespace BlindApp.Model
 
         // vzdialenost od nasledujuce milestone: vysledok trilateracie - suradnice milestonu
 
-        public double Trilateration(List<SharedBeacon> bestBeacons)
-        {
-            SharedBeacon beacon1 = bestBeacons[0];
-            SharedBeacon beacon2 = bestBeacons[1];
-            SharedBeacon beacon3 = bestBeacons[2];
-            SharedBeacon beacon4 = bestBeacons[3];
-
-            double D1 = beacon1.Distance, D2 = beacon2.Distance, D3 = beacon3.Distance, D4 = beacon4.Distance;
-            double X1 = beacon1.XCoordinate, X2 = beacon2.XCoordinate, X3 = beacon3.XCoordinate, X4 = beacon4.XCoordinate;
-            double Y1 = beacon1.XCoordinate, Y2 = beacon2.XCoordinate, Y3 = beacon3.XCoordinate, Y4 = beacon4.YCoordinate;
-            double Z1 = beacon1.ZCoordinate, Z2 = beacon2.ZCoordinate, Z3 = beacon3.ZCoordinate, Z4 = beacon4.ZCoordinate;
-
-            double Alfa = (Math.Pow(D1, 2) - Math.Pow(D2, 2)) - (Math.Pow(X1, 2) - Math.Pow(X2, 2)) - (Math.Pow(Y1, 2) - Math.Pow(Y2, 2)) - (Math.Pow(Z1, 2) - Math.Pow(Z2, 2));
-            double Beta = (Math.Pow(D1, 2) - Math.Pow(D3, 2)) - (Math.Pow(X1, 2) - Math.Pow(X3, 2)) - (Math.Pow(Y1, 2) - Math.Pow(Y3, 2)) - (Math.Pow(Z1, 2) - Math.Pow(Z3, 2));
-            double Gama = (Math.Pow(D1, 2) - Math.Pow(D4, 2)) - (Math.Pow(X1, 2) - Math.Pow(X4, 2)) - (Math.Pow(Y1, 2) - Math.Pow(Y4, 2)) - (Math.Pow(Z1, 2) - Math.Pow(Z4, 2));
-
-            double X21 = 2 * (X2 - X1);
-            double X31 = 2 * (X3 - X1);
-            double X41 = 2 * (X4 - X1);
-
-            double Y21 = 2 * (Y2 - Y1);
-            double Y31 = 2 * (Y3 - Y1);
-            double Y41 = 2 * (Y4 - Y1);
-
-            double Z21 = 2 * (Z2 - Z1);
-            double Z31 = 2 * (Z3 - Z1);
-            double Z41 = 2 * (Z4 - Z1);
-
-            double[][] Xm =
-            {
-                new double[]{ Alfa, Y21, Z21 },
-                new double[]{ Beta, Y31, Z31 },
-                new double[]{ Gama, Y41, Z41 }
-                };
-            double[][] Ym =
-            {
-                new double[]{ X21, Alfa, Z21 },
-                new double[]{ X31, Beta, Z31 },
-                new double[]{ X41, Gama, Z41 }
-            };
-            double[][] Zm =
-            {
-                new double[] { X21, Y21, Alfa },
-                new double[]{ X31, Y31, Beta },
-                new double[]{ X41, Y41, Gama }
-            };
-            double[][] Mm =
-            {
-                new double[]{ X21, Y21, Z21 },
-                new double[]{ X31, Y31, Z31 },
-                new double[]{ X41, Y41, Z41 }
-            };
-
-            double Xd = Matrix<double>.Build.DenseOfColumnArrays(Xm).Determinant();
-            double Yd = Matrix<double>.Build.DenseOfColumnArrays(Ym).Determinant();
-            double Zd = Matrix<double>.Build.DenseOfColumnArrays(Zm).Determinant();
-            double Md = Matrix<double>.Build.DenseOfColumnArrays(Mm).Determinant();
-
-            double X = Xd / Md;
-            double Y = Yd / Md;
-            double Z = Zd / Md;
-
-            double[] coordinates = { X, Y, Z };
-            return 0;
-        }
 
         public void Localize(List<SharedBeacon> bestBeacons)
         {
@@ -166,7 +84,7 @@ namespace BlindApp.Model
                 double d = c2.XCoordinate - c3.XCoordinate;
 
                 double v1 = (beacon1.XCoordinate * beacon1.XCoordinate + beacon1.YCoordinate * beacon1.YCoordinate) -
-                            (beacon1.Distance * beacon1.Distance);
+                    ((beacon1.Distance * 100) * (beacon1.Distance* 100));
                 top += d * v1;
 
                 double v2 = beacon1.YCoordinate * d;
@@ -177,13 +95,14 @@ namespace BlindApp.Model
             double y = top / (2 * bot);
             beacon1 = bestBeacons[0];
             c2 = bestBeacons[1];
-            top = c2.Distance * c2.Distance +
-                  beacon1.XCoordinate * beacon1.XCoordinate +
-                  beacon1.YCoordinate * beacon1.YCoordinate -
-                  beacon1.Distance * beacon1.Distance -
-                  c2.XCoordinate * c2.XCoordinate -
-                  c2.YCoordinate * c2.YCoordinate -
-                  2 * (beacon1.YCoordinate - c2.YCoordinate) * y;
+            top = Math.Pow(c2.Distance * 100, 2)+
+                  Math.Pow(beacon1.XCoordinate, 2) +
+                  Math.Pow(beacon1.YCoordinate, 2) -
+                  Math.Pow(beacon1.Distance* 100, 2) -
+                  Math.Pow(c2.XCoordinate, 2) -
+                  Math.Pow(c2.YCoordinate, 2) -
+                  (2 * (beacon1.YCoordinate - c2.YCoordinate) * y);
+            
             bot = beacon1.XCoordinate - c2.XCoordinate;
             double x = top / (2 * bot);
 
@@ -200,10 +119,62 @@ namespace BlindApp.Model
             Debug.WriteLine("Your position is: " + x + "," + y);
         }
 
+        public bool NewLocalize(List<SharedBeacon> bestBeacons)
+        {
+            var P1 = new Vector3(
+                (float)bestBeacons[0].XCoordinate,
+                (float)bestBeacons[0].YCoordinate,
+                0f);
+            var P2 = new Vector3(
+                (float)bestBeacons[1].XCoordinate,
+                (float)bestBeacons[1].YCoordinate,
+                0f);
+            var P3 = new Vector3(
+                (float)bestBeacons[2].XCoordinate,
+                (float)bestBeacons[2].YCoordinate,
+                0f);
+
+            var DistA = bestBeacons[0].Distance * 100;
+            var DistB = bestBeacons[1].Distance * 100;
+            var DistC = bestBeacons[2].Distance * 100;
+
+            var ex = (P2 - P1) / Norm(P2 - P1);
+            var i = Vector3.Dot(ex, P3 - P1);
+            var ey = (P3 - P1 - i * ex) / (Norm(P3 - P1 - i * ex));
+            var d = Norm(P2 - P1);
+            var j = Vector3.Dot(ey, (P3 - P1));
+
+            float x = (float)(Math.Pow(DistA, 2) - Math.Pow(DistB, 2) + Math.Pow(d, 2)) / (2 * d);
+            float y = (float)((Math.Pow(DistA, 2) - Math.Pow(DistC, 2) + Math.Pow(i, 2) + Math.Pow(j, 2)) / (2 * j)) - ((i / j) * x);
+            var result = P1 + (x * ex) + (y * ey);
+
+            var previousPosition = this.Clone();
+
+            XCoordinate = result.X;
+            YCoordinate = result.Y;
+
+            var distance = GetDistance(this, previousPosition);
+            if (distance > 1)
+            {
+                LastPosition = previousPosition;
+            }
+            Debug.WriteLine("Your position is: " + x + "," + y);
+
+            return true;
+        }
+
         public double GetDistance(Position From, Position To)
         {
             var distance = Math.Pow(From.XCoordinate - To.XCoordinate, 2) + Math.Pow(From.YCoordinate - To.YCoordinate, 2);
             return Math.Sqrt(distance);
+        }
+
+        private static float Norm(Vector3 v)
+        {
+            return (float)Math.Sqrt(
+                Math.Pow(v.X, 2) +
+                Math.Pow(v.Y, 2) +
+                Math.Pow(v.Z, 2));
         }
     }
 }

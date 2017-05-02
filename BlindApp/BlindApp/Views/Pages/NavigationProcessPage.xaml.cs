@@ -15,25 +15,27 @@ namespace BlindApp.Views.Pages
         {
             InitializeComponent();
             Title = "Navigácia";
+            BindingContext = NavigationHandler.Instance;
 
             SpeechRecognition.SetContext(this);
 
-            Task.Run(() =>
-            {
-                Device.StartTimer(TimeSpan.FromSeconds(0.5), () =>
-                {
-                    nextPoint.Text = NavigationHandler.NextMilestone.ToString();
+            //Task.Run(() =>
+            //{
+                //Device.StartTimer(TimeSpan.FromSeconds(1.5), () =>
+                //{
+                    //nextPoint.Text = NavigationHandler.Instance.NextMilestone.ToString();
 
-                    remainingSteps.Text = NavigationHandler.RemainingSteps.ToString();
+                    //remainingSteps.Text = NavigationHandler.Instance.RemainingSteps.ToString();
 
-                    xCoordinate.Text = String.Format("{0:#0.000}", NavigationHandler.Position.XCoordinate);
-                    yCoordinate.Text = String.Format("{0:#0.000}", NavigationHandler.Position.YCoordinate);
+                    //xCoordinate.Text = String.Format("{0:#0.00}", NavigationHandler.Instance.Position.XCoordinate);
+                    //yCoordinate.Text = String.Format("{0:#0.00}", NavigationHandler.Instance.Position.YCoordinate);
 
-                    rotation.Text = NavigationHandler.Position.Rotation.ToString();
+               //     rotation = NavigationHandler.Instance.Position.Rotation.ToString();
 
-                    return true;
-                });
-            });
+                //    return true;
+                //});
+            //});
+
         }
 
         private void OnTouchDown(object sender, EventArgs args)

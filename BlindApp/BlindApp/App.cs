@@ -7,6 +7,8 @@ namespace BlindApp
 {
     public class App : Application
     {
+
+        public static bool DEBUG = false;
  
         public static int ScreenWidth;
         public static int ScreenHeight;
@@ -18,19 +20,21 @@ namespace BlindApp
 
         public App()
         {
+            MainPage = new MainPage();
+
             Database.Initializer.Execute();
+            Building.Init();
 
             TextToSpeech.Init();
             SpeechRecognition.Init();
 
             Bluetooth = DependencyService.Get<IBluetoothController>();
+            DependencyService.Get<ICompass>().Start();
 
             BeaconsHandler = new BeaconsHandler();
 
-            MainPage = new MainPage();
+            //InteractivityLogger.Bu();
 
-
-            Building.Init();
         }
        
         protected override void OnStart()
@@ -51,7 +55,7 @@ namespace BlindApp
         protected override void OnSleep()
         {
             base.OnSleep();
-            NavigationHandler.Position.Compass.Stop();
+            NavigationHandler.Instance.Position.Compass.Stop();
 
             // Handle when your app sleeps
             if (Bluetooth.IsEnabled() && initBTstate == false)

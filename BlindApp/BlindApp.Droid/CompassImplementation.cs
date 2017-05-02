@@ -37,6 +37,10 @@ namespace BlindApp.Droid
 
         bool listenting;
 
+        double SmoothFactorCompass = 0.5;
+        double SmoothThresholdCompass = 30.0;
+        double oldCompass = 0.0;
+
         public CompassImplementation()
         {
             Init();
@@ -103,10 +107,7 @@ namespace BlindApp.Droid
                 sensorManager?.UnregisterListener(this, magnetometer);
         }
 
-        public void OnAccuracyChanged(Sensor sensor, SensorStatus accuracy)
-        {
-
-        }
+        public void OnAccuracyChanged(Sensor sensor, SensorStatus accuracy){}
 
         public event EventHandler<CompassChangedEventArgs> CompassChanged;
 
@@ -133,13 +134,43 @@ namespace BlindApp.Droid
                     SensorManager.GetRotationMatrix(r, null, lastAccelerometer, lastMagnetometer);
                     SensorManager.GetOrientation(r, orientationField);           
 
-                    var azimut = orientationField[0]; // orientation contains: azimut, pitch and roll
-                    var pitch = orientationField[1];
-                    var roll = orientationField[2];
+                    var azimut = orientationField[0];
+                    //var pitch = orientationField[1];
+                    //var roll = orientationField[2];
 
-                    var azimuthInDegress = (Java.Lang.Math.ToDegrees(azimut) + 360.0) % 360.0;
+                    var newCompass = (Java.Lang.Math.ToDegrees(azimut) + 360.0) % 360.0;
 
-                    OnCompassChanged(new CompassChangedEventArgs(azimuthInDegress));
+                    if (Math.Abs(newCompass - oldCompass) < 180)
+                    {
+                        if (Math.Abs(newCompass - oldCompass) > SmoothThresholdCompass)
+                        {
+                            oldCompass = newCompass;
+                        }
+                        else
+                        {
+                            oldCompass = oldCompass + SmoothFactorCompass * (newCompass - oldCompass);
+                        }
+                    }
+                    else
+                    {
+                        if (360.0 - Math.Abs(newCompass - oldCompass) > SmoothThresholdCompass)
+                        {
+                            oldCompass = newCompass;
+                        }
+                        else
+                        {
+                            if (oldCompass > newCompass)
+                            {
+                                oldCompass = (oldCompass + SmoothFactorCompass * ((360 + newCompass - oldCompass) % 360) + 360) % 360;
+                            }
+                            else
+                            {
+                                oldCompass = (oldCompass - SmoothFactorCompass * ((360 - newCompass + oldCompass) % 360) + 360) % 360;
+                            }
+                        }
+                    }
+
+                    OnCompassChanged(new CompassChangedEventArgs(newCompass));
                     lastMagnetometerSet = false;
                     lastAccelerometerSet = false;
                 }          

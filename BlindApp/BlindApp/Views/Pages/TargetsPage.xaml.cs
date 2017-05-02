@@ -66,11 +66,9 @@ namespace BlindApp.Views.Pages
 
         public async void ProcessSelection(Target Target)
         {
-            var endp =  Target.GetNearestEndpoint();
+            TextToSpeech.Speak("Navigujem k cieľu " + Target.Employee + ", miestnosť " + Target.Office);
 
-            TextToSpeech.Speak("Navigujem k cieľu " + Target.Employee + " miestnosť " + Target.Office);
-
-            NavigationHandler.Find(Target);
+            NavigationHandler.Instance.Find(Target);
 
             await Navigation.PushAsync(new NavigationProcessPage());
         }

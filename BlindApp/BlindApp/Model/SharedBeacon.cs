@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 using BlindApp.Database;
 using BlindApp.Database.Tables;
 using SQLite.Net.Attributes;
@@ -7,34 +7,23 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using Xamarin.Forms;
+using BlindApp.Model;
+using System.Linq;
 
 namespace BlindApp
 {
-    [Table("Points")]
-    public class SharedBeacon
+    public class SharedBeacon : MapPoint
     {
         // Received data from bluetooth service 
         public string UID { get; set; }
         public string Major { get; set; }
         public string Minor { get; set; }
-        public double Distance { get; set; }
         public int Rssi { get; set; }
         public string MAC { get; set; }
+        public bool Initilized { get; set; }
         public long LastUpdate { get; set; }
-        //Data from database
-        [PrimaryKey, AutoIncrement, Column("ID")]
-        public int ID { get; set; }
-        public double XCoordinate { get; set; }
-        public double YCoordinate { get; set; }
-        public double ZCoordinate { get; set; }
-        public Point Location {
-            get
-            {
-                return new Point(XCoordinate, YCoordinate);
-            }
-        }
-        public string Floor { get; set; }
-        //        public Array Properties { get; set; }
+        public double Distance { get; set; }
+
         // Extra data //
         public string FormatedDistance
         {
@@ -44,6 +33,7 @@ namespace BlindApp
         public SharedBeacon()
         {
             LastUpdate = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
+            Initilized = false;
         }
 
         public override string ToString()
@@ -64,20 +54,25 @@ namespace BlindApp
         {
             UID = UID.ToUpper();   // lazy hack
 
-            PointsTable pointsTable = new PointsTable(Initializer.DatabaseConnect());
-            
-            var additionalData = pointsTable.SelectSingleRow(
-                "select * from Points Where UID='" + UID +
-                "' AND Minor=" + Minor + " AND Major=" + this.Major
-                );
+            //PointsTable pointsTable = new PointsTable(Initializer.DatabaseConnect());
 
-            if (additionalData != null)
+            //var additionalData = pointsTable.SelectSingleRow(
+            //"select * from Points Where UID='" + UID +
+            //"' AND Minor=" + Minor + " AND Major=" + this.Major
+            //);
+            if (Building.Beacons != null)
             {
-                ID = additionalData.ID;
-                XCoordinate = additionalData.XCoordinate;
-                YCoordinate = additionalData.YCoordinate;
-                ZCoordinate = additionalData.ZCoordinate;
-                Floor = additionalData.Floor;
+                var additionalData = Building.Beacons.Where(item =>
+                    (item.Major == this.Major
+                     && item.Minor == this.Minor)).FirstOrDefault();
+	            if (additionalData != null)
+	            {
+	                XCoordinate = additionalData.XCoordinate;
+	                YCoordinate = additionalData.YCoordinate;
+	                ZCoordinate = additionalData.ZCoordinate;
+	                Floor = additionalData.Floor;
+                    Initilized = true;
+	            }
             }
         }
     }

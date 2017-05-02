@@ -10,7 +10,6 @@ using ScnViewGestures.Plugin.Forms.Droid.Renderers;
 using Android.Content;
 using Android.Views;
 
-
 namespace BlindApp.Droid
 {
     [Activity(
@@ -29,6 +28,7 @@ namespace BlindApp.Droid
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
             Window.SetFlags(WindowManagerFlags.KeepScreenOn, WindowManagerFlags.KeepScreenOn);
 
             App.ScreenWidth = (int)Resources.DisplayMetrics.WidthPixels; // real pixels
