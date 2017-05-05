@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using PropertyChanged;
+using BlindApp.Interfaces;
 
 namespace BlindApp
 {
@@ -27,7 +28,7 @@ namespace BlindApp
         private static NavigationHandler _instance;
        
         public Position Position { get; set; }
-        public  Queue<MapPoint> Path { get; set; }
+        public Queue<MapPoint> Path { get; set; }
 
         public  MapPoint NextMilestone
         {
@@ -39,7 +40,7 @@ namespace BlindApp
             get { return Convert.ToInt32(RemainingMetersNextMilestone / STEP_METERS); }
         }
 
-        public  long RemainingSteps
+        public long RemainingSteps
         {
             get { return Convert.ToInt32(RemainingMeters / STEP_METERS); }
         }
@@ -47,17 +48,31 @@ namespace BlindApp
 
         public  bool DestinationReached;
 
-        private const double STEP_METERS = 1.5f;
+        public double Rotation { get; set; }
+        DateTime LastDirectionUpdate;
 
+        private const double STEP_METERS = 1.2f;
 
         public NavigationHandler()
         {
             RemainingMeters = 0;
             DestinationReached = false;
             Position = new Position();
+
+            App.Compass.CompassChanged += (s, e) =>
+            {
+                if (LastDirectionUpdate.AddSeconds(1).CompareTo(DateTime.Now) < 0)
+                {
+                        // get  vector from  last position and compass change
+                        //                var change = new Vec2(1,1);
+                 
+                    LastDirectionUpdate = DateTime.Now;
+                }
+                Rotation = e.Values;
+            };
         }
 
-        public  async void Find (Target target)
+        public void Find (Target target)
         {
             RemainingMeters = 0;
             DestinationReached = false;
@@ -69,7 +84,7 @@ namespace BlindApp
                 Position.YCoordinate = -1000;
             }
 
-            var path = Map.NewFind(Position.Location, target.Location);
+            var path = NewFind(Position.Location, target.Location);
 
             // HACK target ako beacon
             path.Enqueue(new MapPoint
@@ -81,44 +96,101 @@ namespace BlindApp
             if (path.Count == 0) return;
 
             Path = path.Clone();
-            RemainingMeters = GetPathDistance(path);
+            RemainingMeters = GetPathDistance();
 
-          //  StartNavigation();
-        //    Debug.WriteLine(Path.Peek().Location.ToString());
+            StartNavigation();
         }
 
-        private async Task<bool> StartNavigation()
+        private void StartNavigation()
         {
-        //    await Task.Run( () => Do() );
-    //        Task.Run( () =>
-    //        {
-				//Device.StartTimer(TimeSpan.FromSeconds(0.5), Do());
-            //}).ConfigureAwait(false);
-
-            return true;
+            DependencyService.Get<ICustomThread>().Thread += delegate
+            {
+               Device.StartTimer(TimeSpan.FromSeconds(1), delegate
+               {
+                   
+                   return true;
+               });
+           };
         }
 
-        private Func<bool> Do()
-        {
-            return () => true;
-        }
-
-        private  double GetPathDistance(Queue<MapPoint> path)
+        private  double GetPathDistance()
         {
             double distance = 0;
 
             Point current;
-            var next = path.Dequeue().Location;
+            var next = Path.Dequeue().Location;
             distance += Position.Location.Distance(next);
 
             current = next;
-            while(path.Count > 0)
+            while(Path.Count > 0)
             {
-                distance += path.Peek().Location.Distance(current);
-                current = path.Dequeue().Location;
+                distance += Path.Peek().Location.Distance(current);
+                current = Path.Dequeue().Location;
             }
 
             return distance / 100;
+        }
+
+        public static Queue<MapPoint> NewFind(Point start, Point target)
+        {
+            var path = new Queue<MapPoint>();
+
+            var beacons = Building.Beacons;
+
+            SharedBeacon nearestBeacon = GetCurrnetNearestBeacon(target);
+            path.Enqueue(nearestBeacon);
+
+            SharedBeacon targetBeacon = null;
+            List<string> visited = new List<string>();
+
+            var limit = 0;
+
+            while (targetBeacon == null && limit < 1000)
+            {
+                visited.Add(nearestBeacon.ToString());
+                var currentFitness = EvaluateFitness(start, nearestBeacon.Location, target);
+                var radius = 100;
+                while (radius < 2000)
+                {
+                    var beaconsAround = beacons.Where(item =>
+                        ((item.Location.X > nearestBeacon.Location.X - radius
+                       && item.Location.X < nearestBeacon.Location.X + radius)
+                       && item.Location.Y > nearestBeacon.Location.Y - radius
+                       && item.Location.Y < nearestBeacon.Location.Y + radius)
+                       && EvaluateFitness(start, item.Location, target) < currentFitness
+                       && !visited.Contains(item.ToString())).ToList();
+
+                    if (beaconsAround.Count > 0)
+                    {
+                        nearestBeacon = beaconsAround.OrderByDescending(item => EvaluateFitness(start, item.Location, target)).LastOrDefault(); ;
+                        path.Enqueue(nearestBeacon);
+                        break;
+                    }
+
+                    radius += 100;
+                }
+
+                //  next
+                limit++;
+            }
+            return path;
+        }
+
+        private static SharedBeacon GetCurrnetNearestBeacon(Point target)
+        {
+            var visibleBeacons = App.BeaconsHandler.VisibleData.Clone<List<SharedBeacon>>().Take(4);
+            var position = NavigationHandler.Instance.Position.Location;
+
+            return visibleBeacons.OrderByDescending(x => EvaluateFitness(position, x.Location, target)).LastOrDefault();
+        }
+
+        private static double EvaluateFitness(Point start, Point current, Point target)
+        {
+            // TODO: vzdialenost k cielu ^2 - vzdialenost odomna
+            var distanceToTarget = current.Distance(target);
+
+
+            return distanceToTarget;
         }
     }
 }

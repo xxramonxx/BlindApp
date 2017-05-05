@@ -48,7 +48,7 @@
     <Compile Include="Database\TargetsTable.cs" />
     <Compile Include="Extensions\Heap.cs" />
     <Compile Include="Model\Edge.cs" />
-    <Compile Include="Model\Map.cs" />
+    <Compile Include="Model\Map_DELETED.cs" />
     <Compile Include="Handlers\NavigationHandler.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Handlers\SpeechRecognition.cs" />

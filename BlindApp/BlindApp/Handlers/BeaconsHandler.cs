@@ -14,8 +14,8 @@ namespace BlindApp
 {
     public class BeaconsHandler
     {
-        private readonly int DELETE_INTERVAL_SECONDS = 50;
-        private Dictionary<string, SharedBeacon> beaconList;
+        readonly int DELETE_INTERVAL_SECONDS = 15;
+        Dictionary<string, SharedBeacon> beaconList;
 
         public event EventHandler ListChanged;   
         public List<SharedBeacon> VisibleData { get; set; }
@@ -98,7 +98,7 @@ namespace BlindApp
 	                OnListChanged();
                };
 
-               // InitAgingAlgorithm();
+                InitAgingAlgorithm();
                 InitLocationService();
 
                 beaconService.InitializeService();
@@ -107,26 +107,24 @@ namespace BlindApp
 
         private void InitAgingAlgorithm()
         {
-            Task.Run(async () =>
+            DependencyService.Get<ICustomThread>().Thread += delegate
             {
-                Device.StartTimer(TimeSpan.FromSeconds(1), () =>
-                {
-                    // Beacons aging algorithm
-                    var time = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
-                    foreach (var key in beaconList.Keys.ToList())
-                    {
-                        if (time - beaconList[key].LastUpdate > DELETE_INTERVAL_SECONDS)
-                        {
-                            beaconList.Remove(key);
-                            OnListChanged();
+                 Device.StartTimer(TimeSpan.FromSeconds(1), delegate
+                 {
+                     var time = (Stopwatch.GetTimestamp() / Stopwatch.Frequency);
+                     foreach (var key in beaconList.Keys.ToList())
+                     {
+                         if (time - beaconList[key].LastUpdate > DELETE_INTERVAL_SECONDS)
+                         {
+                             beaconList.Remove(key);
+                             OnListChanged();
 
-                            Debug.WriteLine("Deleting beacon with UID: " + key);
-                        }
-                    }
-                    // Returning true means you want to repeat this timer
-                    return true;
-                });
-            });
+                             Debug.WriteLine("Deleting beacon with UID: " + key);
+                         }
+                     }
+                     return true;
+                 });
+             };
         }
 
         private void InitLocationService()
@@ -136,9 +134,6 @@ namespace BlindApp
                 {
                     Device.StartTimer(TimeSpan.FromSeconds(1), delegate
                     {
-                        System.Diagnostics.Debug.WriteLine("Madafada");
-                        //NavigationHandler.Instance.Position.NewLocalize(beaconList.Values.ToList());
-
                         if (beaconList.Count >= 3)
                         {
                             NavigationHandler.Instance.Position.NewLocalize(beaconList.Values.ToList());

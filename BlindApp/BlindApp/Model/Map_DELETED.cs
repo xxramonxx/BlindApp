@@ -196,7 +196,7 @@ namespace BlindApp.Model
                 }
             }
 
-            return "hovno hovno zlata rybka";
+            return "";
         }
 
         private static void InitNodes()
