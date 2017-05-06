@@ -32,29 +32,29 @@ namespace BlindApp
                     new SharedBeacon
                     {
                         UID="beacon38",
-                        Major = "3",
-                        Minor = "38",
+                        Major = "1",
+                        Minor = "119",
                         Distance = 1,
-                        XCoordinate=4572.08,
-                        YCoordinate=-717.06
+                        XCoordinate=1279.00,
+                        YCoordinate=-2207.00
                     },
                     new SharedBeacon
                     {
                         UID="beacon39",
-                        Major = "3",
-                        Minor = "39",
-                        Distance = 1,
-                        XCoordinate=5570.40,
-                        YCoordinate=-722.00
+                        Major = "1",
+                        Minor = "34",
+                        Distance = 3,
+                        XCoordinate=1186.00,
+                        YCoordinate=-1836.00
                     },
                     new SharedBeacon
                     {
                         UID="beacon53",
-                        Major = "3",
-                        Minor = "53",
-                        Distance = 4,
-                        YCoordinate=-1611.61,
-                        XCoordinate=5075.84
+                        Major = "1",
+                        Minor = "124",
+                        Distance = 3,
+						XCoordinate=1038.00,
+                        YCoordinate=-2570.00
                     },
                 };
                 foreach (var beacon in beacons)
