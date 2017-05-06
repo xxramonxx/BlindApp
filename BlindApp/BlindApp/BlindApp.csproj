@@ -177,6 +177,7 @@
     <EmbeddedResource Include="Sources\beacons_connections.csv" />
     <EmbeddedResource Include="Sources\osoby - Copy.csv" />
     <None Include="FodyWeavers.xml" />
+    <None Include="Sources\fiit\fiit_1.svg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Sources\beacons_data.csv" />
