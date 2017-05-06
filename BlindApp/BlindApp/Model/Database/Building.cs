@@ -26,8 +26,8 @@ namespace BlindApp.Model
             Task.Run(() => {
 	            var assembly = typeof(Building).GetTypeInfo().Assembly;
 
-             //   var uri = "BlindApp.Sources.fiit.fiit_3.svg";
-                var uri = "BlindApp.Sources.fiit.debug.svg";
+                var uri = "BlindApp.Sources.fiit.fiit_3.svg";
+             //   var uri = "BlindApp.Sources.fiit.debug.svg";
 
                 Stream stream = assembly.GetManifestResourceStream(uri);
 	      
@@ -153,5 +153,28 @@ namespace BlindApp.Model
         private static void InitInfos(XElement root)
         {
         }
+
+		public static List<Target> GetTargetsByName(string param)
+		{
+			//var result = SelectMoreRows("select  from Targets WHERE EmployeeParsed LIKE '%" + param + "%'");
+			//if (result.Count == 0)
+			//{
+			//	var keywords = param.Split(' ');
+			//	foreach (var key in keywords.Reverse())
+			//	{
+			//		result = SelectMoreRows("select  from Targets WHERE EmployeeParsed LIKE '%" + key + "%'");
+			//		if (result.Count > 0)
+			//			return result;
+			//	}
+			//}
+			return Targets;
+		}
+
+		public static List<Target> GetTargetsByOffice(string param)
+		{
+			//	param = param.Replace("bodka", ".").Replace(" ", "");
+			//	return SelectMoreRows("select * from Targets WHERE replace( Office, '.', '')='" + param + "'"   }
+			return Targets;
+		}
     }
 }

@@ -9,24 +9,22 @@ using BlindApp.Model;
 using System.Threading;
 using System.Threading.Tasks;
 using BlindApp.Interfaces;
+using PropertyChanged;
 
 namespace BlindApp
 {
+	[ImplementPropertyChanged]
     public class BeaconsHandler
     {
         readonly int DELETE_INTERVAL_SECONDS = 15;
-        Dictionary<string, SharedBeacon> beaconList;
+        Dictionary<string, SharedBeacon> beaconList = new Dictionary<string, SharedBeacon>();
 
         public event EventHandler ListChanged;   
-        public List<SharedBeacon> VisibleData { get; set; }
+        public List<SharedBeacon> VisibleData = new List<SharedBeacon>();
 
-        public BeaconsHandler()
-        {
-            VisibleData = new List<SharedBeacon>();
-            beaconList = new Dictionary<string, SharedBeacon>();
-        }
+		public Position Position { get; set; } = new Position();
 
-        public void Init()
+		public void Init()
         {
             if (App.DEBUG)
             {
@@ -107,7 +105,8 @@ namespace BlindApp
 
         private void InitAgingAlgorithm()
         {
-            DependencyService.Get<ICustomThread>().Thread += delegate
+			var thread = DependencyService.Get<IThreadManager>();
+			thread.ThreadDelegate += delegate
             {
                  Device.StartTimer(TimeSpan.FromSeconds(1), delegate
                  {
@@ -124,26 +123,27 @@ namespace BlindApp
                      }
                      return true;
                  });
-             };
+            };
+			thread.Start(thread.CreateNewThread());
         }
 
         private void InitLocationService()
         {
-            
-                DependencyService.Get<ICustomThread>().Thread += delegate
+			var thread = DependencyService.Get<IThreadManager>();
+			thread.ThreadDelegate += delegate
+            {
+                Device.StartTimer(TimeSpan.FromSeconds(1), delegate
                 {
-                    Device.StartTimer(TimeSpan.FromSeconds(1), delegate
+                    if (beaconList.Count >= 3)
                     {
-                        if (beaconList.Count >= 3)
-                        {
-                            NavigationHandler.Instance.Position.NewLocalize(beaconList.Values.ToList());
-                        }
-                        return true;
-                    });
-                };
+						Position.NewLocalize(beaconList.Values.ToList());
+                    }
+                    return true;
+                });
+            };
+			thread.Start(thread.CreateNewThread());
         }
       
-
         private void OnListChanged()
         {
             VisibleData = beaconList.Values.ToList();

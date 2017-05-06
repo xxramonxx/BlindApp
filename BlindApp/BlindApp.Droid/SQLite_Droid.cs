@@ -5,11 +5,11 @@ using Prototyper.Interface;
 using SQLite.Net;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(SQLite_Droid))]
+//[assembly: Dependency(typeof(SQLite_Droid))]
 
 namespace Prototyper.Droid
 {
-	public class SQLite_Droid : ISQLite
+	/*public class SQLite_Droid : ISQLite
 	{
 		public SQLiteConnection GetConnection(String DatabaseFile)
 		{
@@ -21,5 +21,5 @@ namespace Prototyper.Droid
 
 			return connection;
 		}
-	}
+	}*/
 }

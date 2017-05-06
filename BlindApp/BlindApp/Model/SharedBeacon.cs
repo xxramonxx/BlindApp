@@ -1,6 +1,4 @@
 ﻿﻿
-using BlindApp.Database;
-using BlindApp.Database.Tables;
 using SQLite.Net.Attributes;
 using System;
 using System.Diagnostics;

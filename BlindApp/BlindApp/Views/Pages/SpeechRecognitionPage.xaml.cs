@@ -1,7 +1,4 @@
-﻿using BlindApp.Database;
-using BlindApp.Database.Tables;
-using Java.Text;
-using ScnViewGestures.Plugin.Forms;
+﻿using ScnViewGestures.Plugin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

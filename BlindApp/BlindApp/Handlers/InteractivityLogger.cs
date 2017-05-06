@@ -1,5 +1,4 @@
-﻿using BlindApp.Database.Tables;
-using BlindApp.Model;
+﻿using BlindApp.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,13 +8,63 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using MathNet.Numerics;
 using System.Numerics;
+using BlindApp.Interfaces;
 
 namespace BlindApp
 {
-    public static class InteractivityLogger
+    public class InteractivityLogger
     {
+		private IThreadManager Thread { get; set; }
+		private Int32 ThreadPID { get; set; }
+		private List<Object> CollectedData = new List<Object>();
 
-        public static async void Bu()
+		public InteractivityLogger()
+		{
+			if (Thread == null)
+			{
+				Thread = DependencyService.Get<IThreadManager>();
+				Thread.ThreadDelegate = delegate {
+					ThreadWork();
+				};
+				ThreadPID = Thread.CreateNewThread();
+			}
+		}
+
+		public bool IsThreadRunning { get; set; }
+		private void ThreadWork()
+		{
+
+			while (IsThreadRunning)
+			{
+				if (Record != null)
+				{
+					CollectedData.Add(Record);
+					Record = null;
+
+					Debug.WriteLine(CollectedData.Count);
+				}
+			}
+		}
+
+		private Object Record { get; set; }
+		public void NewRecord(Object record)
+		{
+			Record = record;
+		}
+
+		public void StartLogging()
+		{
+			IsThreadRunning = true;
+			Thread.Start(ThreadPID);
+		}
+
+		public void StopLogging()
+		{
+			IsThreadRunning = false;
+			Thread.Stop(ThreadPID);
+		}
+
+        /*public static async void Bu()
         {
             //var Folder = await FileSystem.Current.LocalStorage.CreateFolderAsync("myFolder",
             //                CreationCollisionOption.OpenIfExists);
@@ -76,5 +125,7 @@ namespace BlindApp
                 Math.Pow(v.Y, 2) +
                 Math.Pow(v.Z, 2));
         }
+
+		*/
     }
 }

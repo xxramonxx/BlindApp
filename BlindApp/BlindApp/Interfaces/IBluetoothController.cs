@@ -1,10 +1,10 @@
-﻿using Android.Bluetooth;
-
+﻿
 namespace BlindApp.Interfaces
 {
     public interface IBluetoothController
     {
-        BluetoothAdapter GetAdapter();
+		//BluetoothAdapter GetAdapter();
+		bool IsAdapterInicialized { get; set; }
         bool IsDiscovering();
         bool IsEnabled();
 

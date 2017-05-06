@@ -11,30 +11,16 @@ namespace BlindApp.Views.Pages
 {
     public partial class NavigationProcessPage : ContentPage
     {
-        public NavigationProcessPage()
+		NavigationHandler _NavigationHandler = new NavigationHandler();
+        public NavigationProcessPage(Target Target)
         {
             InitializeComponent();
             Title = "Navigácia";
-            BindingContext = NavigationHandler.Instance;
+
+            _NavigationHandler.Find(Target);
+            BindingContext = _NavigationHandler;
 
             SpeechRecognition.SetContext(this);
-
-            //Task.Run(() =>
-            //{
-                //Device.StartTimer(TimeSpan.FromSeconds(1.5), () =>
-                //{
-                    //nextPoint.Text = NavigationHandler.Instance.NextMilestone.ToString();
-
-                    //remainingSteps.Text = NavigationHandler.Instance.RemainingSteps.ToString();
-
-                    //xCoordinate.Text = String.Format("{0:#0.00}", NavigationHandler.Instance.Position.XCoordinate);
-                    //yCoordinate.Text = String.Format("{0:#0.00}", NavigationHandler.Instance.Position.YCoordinate);
-
-               //     rotation = NavigationHandler.Instance.Position.Rotation.ToString();
-
-                //    return true;
-                //});
-            //});
 
         }
 
@@ -45,7 +31,16 @@ namespace BlindApp.Views.Pages
 
         private void OnTouchUp(object sender, EventArgs args)
         {
-            SpeechRecognition.Stop();
+			// SpeechRecognition.Stop();
+
+			var radius = 1000;
+			var position = _NavigationHandler.beaconsHandler.Position;
+			var beaconsAround = Building.Beacons.Where(item =>
+			   	((item.Location.X > position.Location.X - radius
+			   	&& item.Location.X < position.Location.X + radius)
+			   	&& item.Location.Y > position.Location.Y - radius
+			    && item.Location.Y < position.Location.Y + radius))
+			    .OrderBy(item => position.Location.Distance(item.Location));
         }
     }
 }

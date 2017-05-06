@@ -7,18 +7,25 @@ using BlindApp.Interfaces;
 
 namespace BlindApp.Droid
 {
-    public class BluetoothController : IBluetoothController
-    {
-        BluetoothAdapter adapter;
+	public class BluetoothController : IBluetoothController
+	{
+		BluetoothAdapter adapter;
+
+		public BluetoothController()
+		{
+			if (adapter == null)
+            {
+                adapter = BluetoothAdapter.DefaultAdapter;
+				IsAdapterInicialized = true;
+            }
+		}
 
         public BluetoothAdapter GetAdapter()
         {
-            if (adapter == null)
-            {
-                adapter = BluetoothAdapter.DefaultAdapter;
-            }
             return adapter;
         }
+
+		public bool IsAdapterInicialized { get; set; }
 
         public bool IsDiscovering()
         {

@@ -47,8 +47,6 @@ namespace BlindApp.Model
 
         // vzdialenost od nasledujuce milestone: vysledok trilateracie - suradnice milestonu
 
-
-
         public bool NewLocalize(List<SharedBeacon> bestBeacons)
         {
             var P1 = new Vector3(

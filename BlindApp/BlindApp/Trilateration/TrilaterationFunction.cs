@@ -1,6 +1,6 @@
-using Java.Lang;
 using MathNet.Numerics.LinearAlgebra;
 using System.Collections.Generic;
+using System;
 /**
 * Models the Trilateration problem. This is a formulation for a nonlinear least
 * squares optimizer.
@@ -28,11 +28,11 @@ namespace BlindApp
 	    public TrilaterationFunction(double[][] positions, double[] distances) {
 
 		    if(positions.Length < 2) {
-			    throw new IllegalArgumentException("Need at least two positions.");
+				throw new Exception("Need at least two positions.");
 		    }
 
 		    if(positions.Length != distances.Length) {
-			    throw new IllegalArgumentException("The number of positions you provided, " +
+			    throw new Exception("The number of positions you provided, " +
                     positions.Length + ", does not match the number of distances, " + distances.Length + ".");
 		    }
 
@@ -44,7 +44,7 @@ namespace BlindApp
 		    int positionDimension = positions[0].Length;
 		    for (int i = 1; i < positions.Length; i++) {
 			    if(positionDimension != positions[i].Length) {
-				    throw new IllegalArgumentException("The dimension of all positions should be the same.");
+				    throw new Exception("The dimension of all positions should be the same.");
 			    }
 		    }
 

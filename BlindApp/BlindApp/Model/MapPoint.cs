@@ -1,4 +1,5 @@
 ﻿using System;
+using PropertyChanged;
 using Xamarin.Forms;
 
 namespace BlindApp

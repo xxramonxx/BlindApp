@@ -1,4 +1,5 @@
-﻿using BlindApp.Interfaces;
+﻿using System;
+using BlindApp.Interfaces;
 using BlindApp.Model;
 using BlindApp.Views.Pages;
 using Xamarin.Forms;
@@ -8,12 +9,12 @@ namespace BlindApp
     public class App : Application
     {
 
-        public static bool DEBUG = false;
+        public static bool DEBUG = true;
  
         public static int ScreenWidth;
         public static int ScreenHeight;
 
-        public static BeaconsHandler BeaconsHandler;
+		public static InteractivityLogger InteractivityLogger;
         public static ICompass Compass;
 
         private IBluetoothController Bluetooth;
@@ -24,7 +25,6 @@ namespace BlindApp
         {
             MainPage = new MainPage();
 
-            Database.Initializer.Execute();
             Building.Init();
 
             TextToSpeech.Init();
@@ -35,15 +35,12 @@ namespace BlindApp
             Compass = DependencyService.Get<ICompass>();
             Compass.Start();
 
-            BeaconsHandler = new BeaconsHandler();
-
-            //InteractivityLogger.Bu();
-
+			InteractivityLogger = new InteractivityLogger();
         }
        
         protected override void OnStart()
         {
-            if (Bluetooth.GetAdapter() != null)
+			if (Bluetooth.IsAdapterInicialized)
             {
                 initBTstate = Bluetooth.IsEnabled();
                 // Handle when your app starts
@@ -52,7 +49,7 @@ namespace BlindApp
                     Bluetooth.Start();
                     TextToSpeech.speakNext("Bluetooth zapnutý");
                 }
-                BeaconsHandler.Init();
+				InteractivityLogger.StartLogging();
             }
         }
 
@@ -65,6 +62,7 @@ namespace BlindApp
             if (Bluetooth.IsEnabled() && initBTstate == false)
             {
                 Bluetooth.Stop();
+				InteractivityLogger.StopLogging();
                 TextToSpeech.Speak("Bluetooth vypnutý");
             }
         }
@@ -75,9 +73,9 @@ namespace BlindApp
             if (!Bluetooth.IsEnabled())
             {
                 Bluetooth.Start();
+				InteractivityLogger.StartLogging();
                 TextToSpeech.Speak("Bluetooth zapnutý");
             }
-            BeaconsHandler.Init();
         }
     }
 }

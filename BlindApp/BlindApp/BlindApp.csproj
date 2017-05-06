@@ -41,31 +41,21 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Interfaces\ICompass.cs" />
     <Compile Include="Views\CustomButton.cs" />
-    <Compile Include="Database\PathsTable.cs" />
-    <Compile Include="Database\PathsTableInitializer.cs" />
-    <Compile Include="Database\TargetsTableInitializer.cs" />
-    <Compile Include="Database\PointsTableInitializer.cs" />
-    <Compile Include="Database\TargetsTable.cs" />
     <Compile Include="Extensions\Heap.cs" />
     <Compile Include="Model\Edge.cs" />
-    <Compile Include="Model\Map_DELETED.cs" />
     <Compile Include="Handlers\NavigationHandler.cs" />
     <Compile Include="Model\Node.cs" />
     <Compile Include="Handlers\SpeechRecognition.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Model\Target.cs" />
     <Compile Include="Model\Position.cs" />
     <Compile Include="Views\Pages\BeaconPage.cs" />
     <Compile Include="Handlers\BeaconsHandler.cs" />
-    <Compile Include="Database\Initializer.cs" />
     <Compile Include="Interfaces\IAltBeaconService.cs" />
     <Compile Include="Interfaces\IBluetoothController.cs" />
     <Compile Include="Interfaces\ISpeechRecognition.cs" />
     <Compile Include="Interfaces\ISQLite.cs" />
     <Compile Include="ListChangedArgs.cs" />
     <Compile Include="Views\ListItemView.cs" />
-    <Compile Include="Database\PointsTable.cs" />
-    <Compile Include="Database\VersionTable.cs" />
     <Compile Include="Views\Pages\IntroPage.xaml.cs">
       <DependentUpon>IntroPage.xaml</DependentUpon>
     </Compile>
@@ -92,15 +82,15 @@
     <Compile Include="Model\Database\Building.cs" />
     <Compile Include="Model\MapPoint.cs" />
     <Compile Include="Handlers\InteractivityLogger.cs" />
-    <Compile Include="Interfaces\ICustomThread.cs" />
+    <Compile Include="Interfaces\IThreadManager.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Interfaces\IStringExtensions.cs" />
+    <Compile Include="Enums\EInteractionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AndroidAltBeaconLibrary, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AndroidAltBeaconLibrary.2.7.0\lib\AndroidAltBeaconLibrary.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Android">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\MonoAndroid\v7.0\Mono.Android.dll</HintPath>
     </Reference>
     <Reference Include="Plugin.Compass, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plugin.Compass.2.0.0\lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10\Plugin.Compass.dll</HintPath>
@@ -134,9 +124,6 @@
       <HintPath>..\..\packages\SQLite.Net-PCL.3.1.1\lib\portable-win8+net45+wp8+wpa81+MonoAndroid1+MonoTouch1\SQLite.Net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Globalization.Extensions">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\Xamarin.WatchOS\v1.0\Facades\System.Globalization.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="MathNet.Numerics">
       <HintPath>..\..\packages\MathNet.Numerics.3.18.0\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MathNet.Numerics.dll</HintPath>
     </Reference>
@@ -152,17 +139,11 @@
     <Reference Include="Xamarin.Forms.Xaml">
       <HintPath>..\..\packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
-    <Reference Include="Java.Interop">
-      <HintPath>..\..\..\..\..\..\Library\Frameworks\Xamarin.Android.framework\Versions\7.3.0-6\lib\xbuild-frameworks\MonoAndroid\v1.0\Java.Interop.dll</HintPath>
-    </Reference>
     <Reference Include="PropertyChanged">
       <HintPath>..\..\packages\PropertyChanged.Fody.1.53.0\lib\portable-net4+sl4+wp8+win8+wpa81+MonoAndroid16+MonoTouch40\PropertyChanged.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics.Vectors">
       <HintPath>..\..\packages\System.Numerics.Vectors.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Android">
-      <HintPath>..\..\..\turistaForms2\Droid\obj\Debug\linksrc\Mono.Android.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +177,6 @@
     <EmbeddedResource Include="Sources\beacons_connections.csv" />
     <EmbeddedResource Include="Sources\osoby - Copy.csv" />
     <None Include="FodyWeavers.xml" />
-    <None Include="OpenTK.dll.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Sources\beacons_data.csv" />
@@ -229,6 +209,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\Database\" />
+    <Folder Include="Enums\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />

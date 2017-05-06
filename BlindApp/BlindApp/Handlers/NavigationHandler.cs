@@ -1,5 +1,4 @@
-﻿﻿using BlindApp.Database.Tables;
-using BlindApp.Model;
+﻿using BlindApp.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,28 +12,15 @@ using BlindApp.Interfaces;
 namespace BlindApp
 {
     [ImplementPropertyChanged]
-    public  class NavigationHandler
-    {
-        public static NavigationHandler Instance
-        {
-            get
-            {
-                if ( _instance == null){
-                    _instance = new NavigationHandler();
-                }
-                return _instance;
-            }
-        }
-        private static NavigationHandler _instance;
-       
-        public Position Position { get; set; }
-        public Queue<MapPoint> Path { get; set; }
+    public class NavigationHandler
+	{
+		public InteractivityLogger Logger = new InteractivityLogger();
+		public BeaconsHandler beaconsHandler { get; set; } = new BeaconsHandler();
+	  	public List<MapPoint> Kokot { get; set; }
 
-        public  MapPoint NextMilestone
-        {
-            get { return Path.Count > 0 ? Path.Peek() : new MapPoint(); }
-        }
-        public  double RemainingMetersNextMilestone;
+		public MapPoint NextMilestone { get; set; }
+        
+		public  double RemainingMetersNextMilestone;
         public  long RemainingStepsNextMilestone
         {
             get { return Convert.ToInt32(RemainingMetersNextMilestone / STEP_METERS); }
@@ -57,7 +43,8 @@ namespace BlindApp
         {
             RemainingMeters = 0;
             DestinationReached = false;
-            Position = new Position();
+
+			beaconsHandler.Init();
 
             App.Compass.CompassChanged += (s, e) =>
             {
@@ -72,73 +59,88 @@ namespace BlindApp
             };
         }
 
-        public void Find (Target target)
-        {
-            RemainingMeters = 0;
-            DestinationReached = false;
+		public void Find(Target target)
+		{
+			RemainingMeters = 0;
+			DestinationReached = false;
 
-            if(App.DEBUG)
-            {
+			if (App.DEBUG)
+			{
 
-                Position.XCoordinate = 4800;
-                Position.YCoordinate = -1000;
-            }
+				beaconsHandler.Position.XCoordinate = 4800;
+				beaconsHandler.Position.YCoordinate = -1000;
+			}
 
-            var path = NewFind(Position.Location, target.Location);
-
+			Kokot = NewFind(beaconsHandler.Position.Location, target.Location);
+			
             // HACK target ako beacon
-            path.Enqueue(new MapPoint
+			Kokot.Add(new MapPoint
             {
                 XCoordinate = target.Location.X,
                 YCoordinate = target.Location.Y
             });
 
-            if (path.Count == 0) return;
+            if (Kokot.Count == 0) return;
 
-            Path = path.Clone();
-            RemainingMeters = GetPathDistance();
+			//Kokot = path.Clone();
+            RemainingMeters = GetKokotDistance();
 
             StartNavigation();
         }
 
-        private void StartNavigation()
-        {
-            DependencyService.Get<ICustomThread>().Thread += delegate
-            {
-               Device.StartTimer(TimeSpan.FromSeconds(1), delegate
-               {
-                   
-                   return true;
-               });
-           };
-        }
+		private void StartNavigation()
+		{
+			var thread = DependencyService.Get<IThreadManager>();
 
-        private  double GetPathDistance()
+			thread.ThreadDelegate += delegate
+			{
+				Device.StartTimer(TimeSpan.FromSeconds(1), delegate
+				{
+					if (Kokot.Count > 0)
+						NextMilestone = Kokot.First();//Kokot.Count > 0 ? Kokot.Peek() : new MapPoint();
+					
+					Logger.NewRecord(EInteractionType.AUTOMATIC);
+					return true;
+				});
+			};
+
+			thread.Start(thread.CreateNewThread());
+		}
+
+        private  double GetKokotDistance()
         {
             double distance = 0;
 
             Point current;
-            var next = Path.Dequeue().Location;
-            distance += Position.Location.Distance(next);
+			var next = Kokot.Last().Location;
+			Kokot.Remove(Kokot.Last());
+			distance += beaconsHandler.Position.Location.Distance(next);
 
             current = next;
-            while(Path.Count > 0)
-            {
-                distance += Path.Peek().Location.Distance(current);
-                current = Path.Dequeue().Location;
-            }
+			Kokot.Reverse();
+
+			foreach (var zlokot in Kokot)
+			{
+				distance += zlokot.Location.Distance(current);
+				current = zlokot.Location;
+			}
+    //        while(Kokot.Count > 0)
+    //        {
+				//distance += Kokot.Last().Location.Distance(current);
+				//current = Kokot.Last().Location;
+				//Kokot.Remove(Kokot.Last());
+    //        }
 
             return distance / 100;
         }
 
-        public static Queue<MapPoint> NewFind(Point start, Point target)
+        public List<MapPoint> NewFind(Point start, Point target)
         {
-            var path = new Queue<MapPoint>();
+            var path = new List<MapPoint>();
 
             var beacons = Building.Beacons;
-
-            SharedBeacon nearestBeacon = GetCurrnetNearestBeacon(target);
-            path.Enqueue(nearestBeacon);
+            var nearestBeacon = GetCurrnetNearestBeacon(target);
+			path.Add(nearestBeacon);
 
             SharedBeacon targetBeacon = null;
             List<string> visited = new List<string>();
@@ -163,7 +165,7 @@ namespace BlindApp
                     if (beaconsAround.Count > 0)
                     {
                         nearestBeacon = beaconsAround.OrderByDescending(item => EvaluateFitness(start, item.Location, target)).LastOrDefault(); ;
-                        path.Enqueue(nearestBeacon);
+						path.Add(nearestBeacon);
                         break;
                     }
 
@@ -176,15 +178,21 @@ namespace BlindApp
             return path;
         }
 
-        private static SharedBeacon GetCurrnetNearestBeacon(Point target)
+        private SharedBeacon GetCurrnetNearestBeacon(Point target)
         {
-            var visibleBeacons = App.BeaconsHandler.VisibleData.Clone<List<SharedBeacon>>().Take(4);
-            var position = NavigationHandler.Instance.Position.Location;
+			//var visibleBeacons = new List<SharedBeacon>();
 
-            return visibleBeacons.OrderByDescending(x => EvaluateFitness(position, x.Location, target)).LastOrDefault();
+			//foreach (var beacon in beaconsHandler.VisibleData.Take(3))
+			//{
+			//	visibleBeacons.Add(beacon);
+			//}
+			var visibleBeacons = beaconsHandler.VisibleData.Clone().Take(3);
+			var _location = beaconsHandler.Position.Location;
+			var result = visibleBeacons.OrderByDescending(x => EvaluateFitness(_location, x.Location, target)).LastOrDefault();
+			return result;
         }
 
-        private static double EvaluateFitness(Point start, Point current, Point target)
+        private double EvaluateFitness(Point start, Point current, Point target)
         {
             // TODO: vzdialenost k cielu ^2 - vzdialenost odomna
             var distanceToTarget = current.Distance(target);

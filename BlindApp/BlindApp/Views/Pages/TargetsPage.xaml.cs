@@ -1,11 +1,10 @@
-﻿using BlindApp.Database.Tables;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Xamarin.Forms;
-using BlindApp.Database;
 using System;
 using System.Linq;
 using System.Diagnostics;
 using BlindApp.Model;
+using BlindApp.Interfaces;
 
 namespace BlindApp.Views.Pages
 {
@@ -16,7 +15,6 @@ namespace BlindApp.Views.Pages
 
         public TargetsPage(int Flag)
         {
-            Map.Init();
             // Building.Init();
 
             InitializeComponent();
@@ -41,7 +39,6 @@ namespace BlindApp.Views.Pages
 
             ListViewObject.ItemTemplate = cell;
 
-            TargetsTable TargetsTable = new TargetsTable(Initializer.DatabaseConnect());
             List<Target> Targets;
 
             if (ChoiceFlag == 1)
@@ -68,9 +65,7 @@ namespace BlindApp.Views.Pages
         {
             TextToSpeech.Speak("Navigujem k cieľu " + Target.Employee + ", miestnosť " + Target.Office);
 
-            NavigationHandler.Instance.Find(Target);
-
-            await Navigation.PushAsync(new NavigationProcessPage());
+            await Navigation.PushAsync(new NavigationProcessPage(Target));
         }
 
         private void OnTouchDown(object sender, EventArgs args)

@@ -1,6 +1,4 @@
-﻿using BlindApp.Database;
-using BlindApp.Database.Tables;
-using SQLite.Net.Attributes;
+﻿using SQLite.Net.Attributes;
 using System;
 using Xamarin.Forms;
 
@@ -28,17 +26,6 @@ namespace BlindApp.Model
             {
                 return new Point(XCoordinate, YCoordinate);
             }
-        }
-
-
-        public string GetNearestEndpoint()
-        {
-            PointsTable pointsTable = new PointsTable(Initializer.DatabaseConnect());
-
-            var endpoint = pointsTable.SelectSingleRow(
-                "select * from Points Where Floor=" + Floor +
-                " AND Minor=" + Minor);
-            return endpoint != null ? endpoint.ToString() : null;
         }
 
         public int CompareTo(Target that)

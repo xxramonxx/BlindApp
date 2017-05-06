@@ -8,7 +8,7 @@ namespace BlindApp.Views.Pages
     public class BeaconPage : ContentPage
     {
         ListView _list;
-        BeaconsHandler ViewModel;  
+       // BeaconsHandler ViewModel;  
 
 
         public BeaconPage()
@@ -16,13 +16,13 @@ namespace BlindApp.Views.Pages
             BackgroundColor = Color.White;
             Title = "Beacon locator";
 
-            ViewModel = App.BeaconsHandler;
-            ViewModel.ListChanged += (sender, e) =>
-            {
-                _list.ItemsSource = ViewModel.VisibleData;
-            };
+            //ViewModel = App.BeaconsHandler;
+            //ViewModel.ListChanged += (sender, e) =>
+            //{
+            //    _list.ItemsSource = ViewModel.VisibleData;
+            //};
 
-            BindingContext = ViewModel;
+            //BindingContext = ViewModel;
 
             /*
                         var view = new SKCanvasView

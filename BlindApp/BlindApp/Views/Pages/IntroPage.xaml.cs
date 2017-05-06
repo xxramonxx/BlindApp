@@ -17,8 +17,6 @@ namespace BlindApp.Views.Pages
             InitializeComponent();
             SpeechRecognition.SetContext(this);
 
-            InteractivityLogger.Test();
-
         }
 
         public void PageDetailChange(object obj, EventArgs e)
