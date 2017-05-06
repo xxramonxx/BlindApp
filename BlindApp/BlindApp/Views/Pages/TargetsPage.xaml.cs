@@ -15,10 +15,11 @@ namespace BlindApp.Views.Pages
 
         public TargetsPage(int Flag)
         {
-            // Building.Init();
-
+            Building.Init();
+			
             InitializeComponent();
             SpeechRecognition.SetContext(this);
+
 
             ListViewObject = this.FindByName<ListView>("ListView");
 

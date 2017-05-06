@@ -25,8 +25,6 @@ namespace BlindApp
         {
             MainPage = new MainPage();
 
-            Building.Init();
-
             TextToSpeech.Init();
             SpeechRecognition.Init();
 

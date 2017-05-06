@@ -86,6 +86,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Interfaces\IStringExtensions.cs" />
     <Compile Include="Enums\EInteractionType.cs" />
+    <Compile Include="Model\Info.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AndroidAltBeaconLibrary, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -153,6 +154,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\fiit\fiit_3.svg" />
     <EmbeddedResource Include="Sources\fiit\debug.svg" />
+    <EmbeddedResource Include="Sources\fiit\fiit_1.svg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Pages\SpeechDetailPage.xaml">
@@ -177,7 +179,6 @@
     <EmbeddedResource Include="Sources\beacons_connections.csv" />
     <EmbeddedResource Include="Sources\osoby - Copy.csv" />
     <None Include="FodyWeavers.xml" />
-    <None Include="Sources\fiit\fiit_1.svg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Sources\beacons_data.csv" />

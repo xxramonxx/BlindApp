@@ -5,28 +5,15 @@ using Xamarin.Forms;
 namespace BlindApp.Model
 {
     [Table("Targets")]
-    public class Target : IComparable<Target>
+    public class Target : MapPoint,IComparable<Target>
     {
-        [PrimaryKey, AutoIncrement, Column("ID")]
-        public int ID { get; set; }
         public string Employee { get; set; }
-//        [Ignore]
         public string EmployeeParsed { get; set; }
         public string Office { get; set; }
-        public int Floor { get; set; }
-        public int Room { get; set; }
+
+		public int Room { get; set; }
         public int Minor { get; set; }
 
-        public double XCoordinate { get; set; }
-        public double YCoordinate { get; set; }
-
-        public Point Location
-        {
-            get
-            {
-                return new Point(XCoordinate, YCoordinate);
-            }
-        }
 
         public int CompareTo(Target that)
         {

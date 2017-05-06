@@ -1310,20 +1310,6 @@
        r="20"
        style="fill:#ffff00;stroke:#000000;stroke-width:0.41954097"
        info="dvere" />
-    <circle
-       cx="1334.6259"
-       cy="2882.1069"
-       id="info7"
-       r="20"
-       style="fill:#ffff00;stroke:#000000;stroke-width:0.41954097"
-       info="recepcia" />
-    <circle
-       cx="1334.6259"
-       cy="2882.1069"
-       id="info8"
-       r="20"
-       style="fill:#ffff00;stroke:#000000;stroke-width:0.41954097"
-       info="recepcia" />
   </g>
   <g
      id="warning">

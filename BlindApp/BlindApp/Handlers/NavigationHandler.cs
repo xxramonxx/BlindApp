@@ -67,8 +67,8 @@ namespace BlindApp
 			if (App.DEBUG)
 			{
 
-				beaconsHandler.Position.XCoordinate = 4800;
-				beaconsHandler.Position.YCoordinate = -1000;
+				beaconsHandler.Position.XCoordinate = 1100;
+				beaconsHandler.Position.YCoordinate = -2100;
 			}
 
 			Kokot = NewFind(beaconsHandler.Position.Location, target.Location);

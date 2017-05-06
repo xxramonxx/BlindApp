@@ -18,30 +18,28 @@ namespace BlindApp.Model
         public static List<Target> Targets;
 
         public static List<string> Warnings;
-        public static List<string> Info;
+        public static List<Info> Info;
 
 
         public static void Init()
         {
-            Task.Run(() => {
-	            var assembly = typeof(Building).GetTypeInfo().Assembly;
+            var assembly = typeof(Building).GetTypeInfo().Assembly;
 
-                //var uri = "BlindApp.Sources.fiit.fiit_3.svg";
-             	var uri = "BlindApp.Sources.fiit_1.svg";
+            //var uri = "BlindApp.Sources.fiit.fiit_3.svg";
+         	var uri = "BlindApp.Sources.fiit.fiit_1.svg";
 
-                Stream stream = assembly.GetManifestResourceStream(uri);
-	      
-                XDocument doc = XDocument.Load(stream);
+            Stream stream = assembly.GetManifestResourceStream(uri);
+      
+            XDocument doc = XDocument.Load(stream);
 
-	            var root = doc?.Root as XElement;
+            var root = doc?.Root as XElement;
 
-	            if (root == null) return;
+            if (root == null) return;
 
-	            InitBeacons(root);
-                InitTargets(root);
-                InitWarnings(root);
-                InitInfos(root);
-            });
+            InitBeacons(root);
+            InitTargets(root);
+            InitWarnings(root);
+            InitInfos(root);
         }
 
         private static void InitBeacons(XElement root)
@@ -136,9 +134,8 @@ namespace BlindApp.Model
 	                        Employee = attributes[0].ToLower().CapitalizeFirstLetters(), // remove accents
 	                        EmployeeParsed = attributes[0].ToLower().RemoveDiacritics(),
 	                        Office = attributes[1],
-	                        Floor = int.Parse(attributes[2]),
-	                        Room = Room,
-	                        Minor = int.Parse(attributes[3]),
+	                        Floor = attributes[2],
+	                        Room = Room
 	                }
                 );
             }
@@ -152,6 +149,33 @@ namespace BlindApp.Model
 
         private static void InitInfos(XElement root)
         {
+			Info = new List<Info>();
+
+            var beaconsGroup = root
+				.Elements()
+				.Where(e => (e.Name.LocalName == "g" && e.Attribute("id").Value == "info"));
+
+			var beacons = beaconsGroup.Elements().Where(e => (e.Name.LocalName == "circle"));
+
+			foreach (var beacon in beacons)
+			{
+				try
+				{
+					Info.Add(
+						new Info
+						{
+							XCoordinate = Convert.ToDouble(beacon.Attribute("cx").Value, CultureInfo.InvariantCulture),
+							YCoordinate = Convert.ToDouble(beacon.Attribute("cy").Value, CultureInfo.InvariantCulture) * -1,
+							ZCoordinate = 0,
+							Information = beacon.Attribute("info").Value
+						}
+					);
+				}
+				catch (Exception e)
+				{
+					Debug.WriteLine("Warning: attribute not found while parsing SVG: " + e.Message);
+				}
+			}
         }
 
 		public static List<Target> GetTargetsByName(string param)
