@@ -51,7 +51,6 @@ namespace BlindApp
                     Bluetooth.Start();
                     TextToSpeech.speakNext("Bluetooth zapnutý");
                 }
-				InteractivityLogger.StartLogging();
             }
 		}
 
@@ -60,9 +59,6 @@ namespace BlindApp
 			base.OnSleep();
 
 			Compass.Stop();
-
-			if (InteractivityLogger.IsThreadRunning)
-				InteractivityLogger.StopLogging();
 
             // Handle when your app sleeps
             if (Bluetooth.IsEnabled() && initBTstate == false)
@@ -76,8 +72,7 @@ namespace BlindApp
 		{
 			base.OnResume();
 
-			if (!InteractivityLogger.IsThreadRunning)
-				InteractivityLogger.StartLogging();
+			InteractivityLogger.SaveCollectedData();
 
 			// Handle when your app resumes
             if (!Bluetooth.IsEnabled())

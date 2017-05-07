@@ -15,55 +15,15 @@ namespace BlindApp
 {
     public class InteractivityLogger
     {
-		private IThreadManager Thread { get; set; }
-		private Int32 ThreadPID { get; set; }
 		private List<InteractivityRecord> CollectedData = new List<InteractivityRecord>();
 
-		public InteractivityLogger()
-		{
-			if (Thread == null)
-			{
-				Thread = DependencyService.Get<IThreadManager>();
-				Thread.ThreadDelegate = delegate {
-					ThreadWork();
-				};
-				ThreadPID = Thread.CreateNewThread();
-			}
-		}
-
-		public bool IsThreadRunning { get; set; }
-		private void ThreadWork()
-		{
-
-			while (IsThreadRunning)
-			{
-				if (Record != null)
-				{
-					CollectedData.Add(Record);
-					Record = null;
-
-					Debug.WriteLine(CollectedData.Count);
-				}
-			}
-		}
-
-		private InteractivityRecord Record { get; set; }
 		public void NewRecord(InteractivityRecord record)
 		{
-			Record = record;
+			CollectedData.Add(record);
 		}
 
-		public void StartLogging()
+		public void SaveCollectedData()
 		{
-			IsThreadRunning = true;
-			Thread.Start(ThreadPID);
-		}
-
-		public void StopLogging()
-		{
-			IsThreadRunning = false;
-			Thread.Stop(ThreadPID);
-
 			var files = DependencyService.Get<IFiles>();
 
 			var oldInteractivityJson = files.LoadFile("interactivity.json");
