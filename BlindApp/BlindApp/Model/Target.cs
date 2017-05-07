@@ -1,14 +1,28 @@
-﻿using SQLite.Net.Attributes;
-using System;
+﻿using System;
 using Xamarin.Forms;
 
 namespace BlindApp.Model
 {
-    [Table("Targets")]
     public class Target : MapPoint,IComparable<Target>
     {
         public string Employee { get; set; }
         public string EmployeeParsed { get; set; }
+        public string FirstName
+        {
+            get 
+            {
+                return EmployeeParsed.Split(' ')[0];
+            }
+        }
+        public string LastName
+        {
+            get
+            {
+                var result = EmployeeParsed.Split(' ');
+                return result[result.Length];
+            }
+        }
+               
         public string Office { get; set; }
 
 		public int Room { get; set; }
