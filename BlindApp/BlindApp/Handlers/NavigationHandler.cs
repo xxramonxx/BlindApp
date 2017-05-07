@@ -64,12 +64,12 @@ namespace BlindApp
 			RemainingMeters = 0;
 			DestinationReached = false;
 
-			if (App.DEBUG)
-			{
+			//if (App.DEBUG)
+			//{
 
-				beaconsHandler.Position.XCoordinate = 1100;
-				beaconsHandler.Position.YCoordinate = -2100;
-			}
+			//	beaconsHandler.Position.XCoordinate = 1100;
+			//	beaconsHandler.Position.YCoordinate = -2100;
+			//}
 
 			Kokot = NewFind(beaconsHandler.Position.Location, target.Location);
 			
@@ -94,10 +94,21 @@ namespace BlindApp
 
 			thread.ThreadDelegate += delegate
 			{
+				var kokotCounter = 0;
+				NextMilestone = Kokot.First();
+				
+
 				Device.StartTimer(TimeSpan.FromSeconds(1), delegate
 				{
-					if (Kokot.Count > 0)
-						NextMilestone = Kokot.First();//Kokot.Count > 0 ? Kokot.Peek() : new MapPoint();
+					/*if (Kokot.Count > 0)
+					{
+						kokotCounter++;
+					}*/
+
+					var distanceToNextPoint = NextMilestone.Location.Distance(beaconsHandler.Position.Location);
+
+					if (distanceToNextPoint < 200)
+						NextMilestone = Kokot[kokotCounter++];
 					
 					Logger.NewRecord(EInteractionType.AUTOMATIC);
 					return true;
@@ -109,17 +120,18 @@ namespace BlindApp
 
         private  double GetKokotDistance()
         {
+			var _kokot = Kokot.Clone();
             double distance = 0;
 
             Point current;
-			var next = Kokot.Last().Location;
-			Kokot.Remove(Kokot.Last());
+			var next = _kokot.Last().Location;
+			_kokot.Remove(Kokot.Last());
 			distance += beaconsHandler.Position.Location.Distance(next);
 
             current = next;
-			Kokot.Reverse();
+			_kokot.Reverse();
 
-			foreach (var zlokot in Kokot)
+			foreach (var zlokot in _kokot)
 			{
 				distance += zlokot.Location.Distance(current);
 				current = zlokot.Location;

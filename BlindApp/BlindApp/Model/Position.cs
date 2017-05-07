@@ -47,8 +47,10 @@ namespace BlindApp.Model
 
         // vzdialenost od nasledujuce milestone: vysledok trilateracie - suradnice milestonu
 
-        public bool NewLocalize(List<SharedBeacon> bestBeacons)
+        public bool NewLocalize(List<SharedBeacon> Beacons)
         {
+			var floor = Beacons.GroupBy(item => item.Major).Max().FirstOrDefault().Major;
+			var bestBeacons = Beacons.Where(bimbas => bimbas.Major == floor).OrderBy(item => item.Distance).ToList();
             var P1 = new Vector3(
                 (float)bestBeacons[0].XCoordinate,
                 (float)bestBeacons[0].YCoordinate,
@@ -78,6 +80,7 @@ namespace BlindApp.Model
 
             XCoordinate = result.X;
             YCoordinate = result.Y;
+			Floor = floor;
 
             var distance = GetDistance(this, LastPosition);
             if (distance > 100)

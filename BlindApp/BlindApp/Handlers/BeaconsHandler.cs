@@ -96,11 +96,10 @@ namespace BlindApp
 	                OnListChanged();
                };
 
-                InitAgingAlgorithm();
-                InitLocationService();
-
                 beaconService.InitializeService();
-            }           
+            }
+			InitAgingAlgorithm();
+			InitLocationService();
         }
 
         private void InitAgingAlgorithm()
@@ -134,7 +133,7 @@ namespace BlindApp
             {
                 Device.StartTimer(TimeSpan.FromSeconds(1), delegate
                 {
-                    if (beaconList.Count >= 3)
+                    if (beaconList.Count > 2)
                     {
 						Position.NewLocalize(beaconList.Values.ToList());
                     }

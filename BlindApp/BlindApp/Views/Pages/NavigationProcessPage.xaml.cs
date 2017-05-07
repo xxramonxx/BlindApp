@@ -52,7 +52,7 @@ namespace BlindApp.Views.Pages
 				compassAngle = _NavigationHandler.Rotation - 360;
 				
 
-			var sight = 45;
+			var sight = 22.5;
 
 			var minusAngle = compassAngle - sight;
 			var plusAngle = compassAngle + sight;
@@ -63,11 +63,27 @@ namespace BlindApp.Views.Pages
 			}
 			else if (finalAngle < minusAngle && finalAngle > (minusAngle - 2 * sight))
 			{
+				Debug.WriteLine("Vpredu vlavo");
+			}
+			else if (finalAngle < minusAngle && finalAngle > (minusAngle - 4 * sight))
+			{
 				Debug.WriteLine("Vlavo");
+			}
+			else if (finalAngle < minusAngle && finalAngle > (minusAngle - 6 * sight))
+			{
+				Debug.WriteLine("Vzadu Vlavo");
 			}
 			else if (finalAngle > plusAngle && finalAngle < (plusAngle + 2 * sight))
 			{
+				Debug.WriteLine("Vpredu vpravo");
+			}
+			else if (finalAngle > plusAngle && finalAngle < (plusAngle + 4 * sight))
+			{
 				Debug.WriteLine("Vpravo");
+			}
+			else if (finalAngle > plusAngle && finalAngle < (plusAngle + 6 * sight))
+			{
+				Debug.WriteLine("Vzadu vpravo");
 			}
 			else
 			{

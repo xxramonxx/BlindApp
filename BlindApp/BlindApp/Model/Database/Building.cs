@@ -56,16 +56,16 @@ namespace BlindApp.Model
             {
                 try
                 {
-                    Beacons.Add(
-                        new SharedBeacon
-                        {
-                            UID = beacon.Attribute("id").Value,
-                            Major = beacon.Attribute("major").Value,
+					Beacons.Add(
+						new SharedBeacon
+						{
+							UID = beacon.Attribute("id").Value,
+							Major = "0", //beacon.Attribute("major").Value,
                             Minor = beacon.Attribute("minor").Value,
                             XCoordinate = Convert.ToDouble(beacon.Attribute("cx").Value, CultureInfo.InvariantCulture),
                             YCoordinate = Convert.ToDouble(beacon.Attribute("cy").Value, CultureInfo.InvariantCulture) * -1,
                             ZCoordinate = 0,
-                            Floor = beacon.Attribute("major").Value
+                            Floor = "0"//beacon.Attribute("major").Value
                         }
                     );
                 }
@@ -92,10 +92,13 @@ namespace BlindApp.Model
             {
                 try
                 {
-                    var _mapTarget = beacons.SingleOrDefault(x => x.Attribute("room").Value == target.Office);
-                    target.XCoordinate = Convert.ToDouble(_mapTarget.Attribute("cx").Value, CultureInfo.InvariantCulture);
-                    target.YCoordinate = Convert.ToDouble(_mapTarget.Attribute("cy").Value, CultureInfo.InvariantCulture) * -1;
+					var _mapTarget = beacons.FirstOrDefault(x => x.Attribute("room").Value == target.Office);
+					if (_mapTarget != null)
+					{
 
+						target.XCoordinate = Convert.ToDouble(_mapTarget.Attribute("cx").Value, CultureInfo.InvariantCulture);
+						target.YCoordinate = Convert.ToDouble(_mapTarget.Attribute("cy").Value, CultureInfo.InvariantCulture) * -1;
+					}
                 }
                 catch (Exception e)
                 {
