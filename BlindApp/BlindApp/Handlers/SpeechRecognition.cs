@@ -1,10 +1,7 @@
 ﻿using BlindApp.Model;
 using BlindApp.Views.Pages;
-using ScnViewGestures.Plugin.Forms;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using Xamarin.Forms;
@@ -70,7 +67,7 @@ namespace BlindApp
                 }
                 else
                 {
-                    TextToSpeech.Speak("Neznámy konktext vstupu");
+                    TextToSpeech.Speak("Neznámy kontext vstupu");
                 }  
             }
             else
@@ -120,62 +117,60 @@ namespace BlindApp
         private void TargetsPageTask(IList<string> result)
         {
 
-            //TargetsTable TargetsTable = new TargetsTable(Initializer.DatabaseConnect());
-            //List<Target> Targets;
+            List<Target> Targets;
 
-            //if (result[0].Contains("navig")) {
-            //    var a = TargetsPage.ListViewObject.ItemsSource as List<Target>;
-            //    TargetsPage.ListViewObject.SelectedItem = a.First();
-            //    return;
-            //}
+            if (result[0].Contains("navig")) {
+                var a = TargetsPage.ListViewObject.ItemsSource as List<Target>;
+                TargetsPage.ListViewObject.SelectedItem = a.First();
+                return;
+            }
 
-            //if (TargetsPage.ChoiceFlag == 1)
-            //    Targets = TargetsTable.GetTargetsByName(result[0].RemoveDiacritics());
-            //else
-            //    Targets = TargetsTable.GetTargetsByOffice(result[0].RemoveDiacritics());
+            if (TargetsPage.ChoiceFlag == 1)
+                Targets = Building.GetTargetsByName(result[0].RemoveDiacritics());
+            else
+                Targets = Building.GetTargetsByOffice(result[0].RemoveDiacritics());
 
-            //if (Targets.Count == 0 && (result[0].Contains("všetk") || result[0].Contains("zruš")))
-            //{
-            //    // read all data
-            //    if (TargetsPage.ChoiceFlag == 1)
-            //    {
-            //        Targets = TargetsTable.SelectMoreRows("SELECT *,substr(EmployeeParsed, 1, instr(EmployeeParsed, ' ') - 1) AS first_name, substr(EmployeeParsed, instr(EmployeeParsed, ' ') + 1) AS last_name from Targets ORDER BY last_name");
-            //    }
-            //    else
-            //    {
-            //        Targets = TargetsTable.SelectMoreRows("SELECT * from Targets ORDER BY Office");
-            //        Targets = Targets.GroupBy(x => x.Office).Select(y => y.First()).ToList();
-            //    }
-            //}
-            //else
-            //{
-            //    StringBuilder StringBuilder = new StringBuilder();
-            //    StringBuilder.Append("Našla som " + Targets.Count);
+            if (Targets.Count == 0 && (result[0].Contains("všetk") || result[0].Contains("zruš")))
+            {
+                // read all data
+                if (TargetsPage.ChoiceFlag == 1)
+                {
+                    Targets = Targets.OrderBy(x=> x.LastName).ToList();
+                }
+                else
+                {
+                    Targets = Targets.OrderBy(x => x.Office).GroupBy(x => x.Office).Select(y => y.First()).ToList();
+                }
+            }
+            else
+            {
+                StringBuilder StringBuilder = new StringBuilder();
+                StringBuilder.Append("Našla som " + Targets.Count);
 
-            //    if (Targets.Count == 1)
-            //        StringBuilder.Append(" výsledok\n");
-            //    else if (Targets.Count > 1 && Targets.Count < 5)
-            //        StringBuilder.Append(" výsledky\n");
-            //    else
-            //        StringBuilder.Append(" výsledkov\n");
+                if (Targets.Count == 1)
+                    StringBuilder.Append(" výsledok\n");
+                else if (Targets.Count > 1 && Targets.Count < 5)
+                    StringBuilder.Append(" výsledky\n");
+                else
+                    StringBuilder.Append(" výsledkov\n");
 
-            //    for (var i = 0; i < Targets.Count && i < 3; i++)
-            //    {
-            //        if (TargetsPage.ChoiceFlag == 1)
-            //            StringBuilder.Append(Targets[i].Employee + " miestnosť " + Targets[i].Office + "\n");
-            //        else
-            //            StringBuilder.Append("Miestnosť " + Targets[i].Office + "\n");
-            //    }
+                for (var i = 0; i < Targets.Count && i < 3; i++)
+                {
+                    if (TargetsPage.ChoiceFlag == 1)
+                        StringBuilder.Append(Targets[i].Employee + " miestnosť " + Targets[i].Office + "\n");
+                    else
+                        StringBuilder.Append("Miestnosť " + Targets[i].Office + "\n");
+                }
 
-            //    if (Targets.Count >= 3)
-            //    {
-            //        StringBuilder.Append("a ďalšie");
-            //    }
+                if (Targets.Count >= 3)
+                {
+                    StringBuilder.Append("a ďalšie");
+                }
 
-            //    TextToSpeech.speakNext(StringBuilder.ToString());
-            //}
+                TextToSpeech.speakNext(StringBuilder.ToString());
+            }
 
-			TargetsPage.ListViewObject.ItemsSource = Building.Targets.Take(1);
+			TargetsPage.ListViewObject.ItemsSource = Targets;
         }
     }
 }

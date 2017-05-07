@@ -183,25 +183,25 @@ namespace BlindApp.Model
 
 		public static List<Target> GetTargetsByName(string param)
 		{
-			//var result = SelectMoreRows("select  from Targets WHERE EmployeeParsed LIKE '%" + param + "%'");
-			//if (result.Count == 0)
-			//{
-			//	var keywords = param.Split(' ');
-			//	foreach (var key in keywords.Reverse())
-			//	{
-			//		result = SelectMoreRows("select  from Targets WHERE EmployeeParsed LIKE '%" + key + "%'");
-			//		if (result.Count > 0)
-			//			return result;
-			//	}
-			//}
-			return Targets;
+
+            var result = Targets.Where(x => x.EmployeeParsed.Contains(param)).ToList();
+			if (result.Count == 0)
+			{
+				var keywords = param.Split(' ');
+				foreach (var key in keywords.Reverse())
+				{
+                    result = Targets.Where(x => x.EmployeeParsed.Contains(param)).ToList();
+					if (result.Count > 0)
+						return result;
+				}
+			}
+			return result;
 		}
 
 		public static List<Target> GetTargetsByOffice(string param)
 		{
-			//	param = param.Replace("bodka", ".").Replace(" ", "");
-			//	return SelectMoreRows("select * from Targets WHERE replace( Office, '.', '')='" + param + "'"   }
-			return Targets;
+			param = param.Replace("bodka", ".").Replace(" ", "");
+            return Targets.Where(x => x.Office.Replace(".", "") == param).ToList();
 		}
     }
 }
