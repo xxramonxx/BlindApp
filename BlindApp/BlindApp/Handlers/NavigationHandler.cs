@@ -14,7 +14,6 @@ namespace BlindApp
     [ImplementPropertyChanged]
     public class NavigationHandler
 	{
-		public InteractivityLogger Logger = new InteractivityLogger();
 		public BeaconsHandler beaconsHandler { get; set; } = new BeaconsHandler();
 	  	public List<MapPoint> Kokot { get; set; }
 
@@ -100,17 +99,17 @@ namespace BlindApp
 
 				Device.StartTimer(TimeSpan.FromSeconds(1), delegate
 				{
-					/*if (Kokot.Count > 0)
-					{
-						kokotCounter++;
-					}*/
-
 					var distanceToNextPoint = NextMilestone.Location.Distance(beaconsHandler.Position.Location);
 
 					if (distanceToNextPoint < 200)
 						NextMilestone = Kokot[kokotCounter++];
 					
-					Logger.NewRecord(EInteractionType.AUTOMATIC);
+					App.InteractivityLogger.NewRecord(new InteractivityRecord
+					{
+						Interaction = EInteractionType.AUTOMATIC,
+						X = beaconsHandler.Position.XCoordinate,
+						Y = beaconsHandler.Position.YCoordinate
+					});
 					return true;
 				});
 			};

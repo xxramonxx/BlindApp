@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using MathNet.Numerics;
 using System.Numerics;
 using BlindApp.Interfaces;
+using Newtonsoft.Json;
 
 namespace BlindApp
 {
@@ -16,7 +17,7 @@ namespace BlindApp
     {
 		private IThreadManager Thread { get; set; }
 		private Int32 ThreadPID { get; set; }
-		private List<Object> CollectedData = new List<Object>();
+		private List<InteractivityRecord> CollectedData = new List<InteractivityRecord>();
 
 		public InteractivityLogger()
 		{
@@ -46,8 +47,8 @@ namespace BlindApp
 			}
 		}
 
-		private Object Record { get; set; }
-		public void NewRecord(Object record)
+		private InteractivityRecord Record { get; set; }
+		public void NewRecord(InteractivityRecord record)
 		{
 			Record = record;
 		}
@@ -62,6 +63,23 @@ namespace BlindApp
 		{
 			IsThreadRunning = false;
 			Thread.Stop(ThreadPID);
+
+			var files = DependencyService.Get<IFiles>();
+
+			var oldInteractivityJson = files.LoadFile("interactivity.json");
+			var interactivity = new Dictionary<int, List<InteractivityRecord>>();
+
+			if (!String.IsNullOrEmpty(oldInteractivityJson))
+			{
+				interactivity = JsonConvert.DeserializeObject<Dictionary<int, List<InteractivityRecord>>>(oldInteractivityJson);
+				interactivity.Add(1 + interactivity.Keys.Max(), CollectedData);
+			}
+			else
+			{
+				interactivity.Add(0, CollectedData);
+			}
+
+			files.SaveFile("interactivity.json", JsonConvert.SerializeObject(interactivity));
 		}
 
         /*public static async void Bu()

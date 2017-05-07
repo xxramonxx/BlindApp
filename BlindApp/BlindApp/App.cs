@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using BlindApp.Interfaces;
 using BlindApp.Model;
 using BlindApp.Views.Pages;
+using Newtonsoft.Json;
 using Xamarin.Forms;
 
 namespace BlindApp
@@ -35,9 +37,11 @@ namespace BlindApp
 
 			InteractivityLogger = new InteractivityLogger();
         }
-       
-        protected override void OnStart()
-        {
+
+		protected override void OnStart()
+		{
+			base.OnStart();
+
 			if (Bluetooth.IsAdapterInicialized)
             {
                 initBTstate = Bluetooth.IsEnabled();
@@ -49,31 +53,44 @@ namespace BlindApp
                 }
 				InteractivityLogger.StartLogging();
             }
-        }
+		}
 
-        protected override void OnSleep()
-        {
-            base.OnSleep();
-            Compass.Stop();
+		protected override void OnSleep()
+		{
+			base.OnSleep();
+
+			Compass.Stop();
+
+			if (InteractivityLogger.IsThreadRunning)
+				InteractivityLogger.StopLogging();
 
             // Handle when your app sleeps
             if (Bluetooth.IsEnabled() && initBTstate == false)
             {
                 Bluetooth.Stop();
-				InteractivityLogger.StopLogging();
                 TextToSpeech.Speak("Bluetooth vypnutý");
             }
-        }
+		}
 
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
+		protected override void OnResume()
+		{
+			base.OnResume();
+
+			if (!InteractivityLogger.IsThreadRunning)
+				InteractivityLogger.StartLogging();
+
+			// Handle when your app resumes
             if (!Bluetooth.IsEnabled())
             {
                 Bluetooth.Start();
-				InteractivityLogger.StartLogging();
                 TextToSpeech.Speak("Bluetooth zapnutý");
             }
-        }
+
+			//Debug
+			var files = DependencyService.Get<IFiles>();
+
+			var oldInteractivityJson = files.LoadFile("interactivity.json");
+			System.Diagnostics.Debug.WriteLine(oldInteractivityJson);
+		}
     }
 }

@@ -204,6 +204,7 @@
     <Compile Include="SQLite_Droid.cs" />
     <Compile Include="ThreadManager.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Files.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

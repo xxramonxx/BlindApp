@@ -87,6 +87,8 @@
     <Compile Include="Interfaces\IStringExtensions.cs" />
     <Compile Include="Enums\EInteractionType.cs" />
     <Compile Include="Model\Info.cs" />
+    <Compile Include="Model\InteractivityRecord.cs" />
+    <Compile Include="Interfaces\IFiles.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AndroidAltBeaconLibrary, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
